@@ -1,29 +1,111 @@
+@bg-color: #f5f5ee;
+@gradient-color-from: rgba(214, 222, 230, 0.2);
+@gradient-color-to: rgba(214, 222, 230, 0.01);
+
 body {
     margin: 0;
+    background-color: @bg-color;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    overflow: hidden;
-    height: 100vh;
 }
 
-.slides {
-    position: absolute;
-    top: 0vh;
-    > section.slide {
-        height: 100vh;
-        width: 100vw;
-        padding: 3vh;
-        box-sizing: border-box;
-        background-color: #142033;
-        > .slide-content {
+.filmstrip {
+    overflow: hidden;
+    height: 100vh;
+
+    .slides {
+        position: absolute;
+        top: 0vh;
+        display: flex;
+        flex-wrap: nowrap;
+        &.slides-vertical {
+            flex-direction: column;
+        }
+        &.slides-horizontal {
+            flex-direction: row;
+        }
+        > section.slide {
+            height: 100vh;
+            width: 100vw;
             padding: 3vh;
-            width: 100%;
-            height: 100%;
             box-sizing: border-box;
-            background-color: #f5f5ee;
-            border-radius: 2vh;
+            background-color: #142033;
+            > .slide-content {
+                padding: 3vh;
+                width: 100%;
+                height: 100%;
+                box-sizing: border-box;
+                background-color: @bg-color;
+                border-radius: 2vw/2vh;
+            }
+        }
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0vh;
+        width: 100vw;
+        height: 100vh;
+
+        > .previous-slide,
+        > .next-slide {
+            position: absolute;
+            cursor: pointer;
+            &:hover {
+                background-color: rgba(214, 222, 230, 0.3);
+            }
+        }
+
+        > .previous-slide {
+            top: 0%;
+            left: 0%;
+        }
+
+        > .next-slide {
+            bottom: 0%;
+            right: 0%;
+        }
+
+        &.overlay-vertical {
+            > .previous-slide,
+            > .next-slide {
+                width: 100%;
+                height: 25%;
+            }
+
+            > .previous-slide {
+                &:hover {
+                    background: linear-gradient(to bottom, @gradient-color-from, @gradient-color-to);
+                }
+            }
+
+            > .next-slide {
+                &:hover {
+                    background: linear-gradient(to top, @gradient-color-from, @gradient-color-to);
+                }
+            }
+        }
+        
+        &.overlay-horizontal {
+            > .previous-slide,
+            > .next-slide {
+                width: 25%;
+                height: 100%;
+            }
+
+            > .previous-slide {
+                &:hover {
+                    background: linear-gradient(to right, @gradient-color-from, @gradient-color-to);
+                }
+            }
+
+            > .next-slide {
+                &:hover {
+                    background: linear-gradient(to left, @gradient-color-from, @gradient-color-to);
+                }
+            }
         }
     }
 }
