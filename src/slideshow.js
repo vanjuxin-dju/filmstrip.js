@@ -1,41 +1,24 @@
 export default class SlideShow {
+    #currentSlide = 0;
+
     constructor() {
-        this.slidesParent = document.getElementsByClassName("slides")[0];
-        this.slidesDirection = this.slidesParent.classList.contains("slides-horizontal") ? "horizontal" : "vertical";
-
-        this.slides = document.getElementsByClassName("slide");
-        const overlay = document.getElementsByClassName("overlay")[0];
-        this.currentSlide = 0;
-
-        overlay.children.previous.onclick = () => {
-            if (this.currentSlide > 0) {
-                this.scrollSlide("previous");
-                this.currentSlide--;
-            }
-        };
-        
-        overlay.children.next.onclick = () => {
-            if (this.currentSlide + 1 < this.slides.length) {
-                this.scrollSlide("next");
-                this.currentSlide++;
-            }
-        };
+        this._slidesParent = document.getElementsByClassName("slides")[0];
+        this._slidesDirection = this._slidesParent.classList.contains("slides-horizontal") ? "horizontal" : "vertical";
+        this._slidesCount = document.getElementsByClassName("slide").length;
     }
 
-    scrollSlide(direction) {
+    #scrollSlide(direction) {
         const scrollStep = 100;
-        const startingPoint = this.slidesDirection === "vertical" ? 
-                                (this.slidesParent.style.top ? parseInt(this.slidesParent.style.top) : 0) : 
-                                (this.slidesParent.style.left ? parseInt(this.slidesParent.style.left) : 0);
+        const startingPoint = this.#currentSlide * (-100);
         let step = 1;
         let i = 1;
     
         const animateScroll = () => {
             setTimeout(() => {
-                if (this.slidesDirection === "vertical") {
-                    this.slidesParent.style.top = (direction === "next" ? startingPoint - i : startingPoint + i) + "vh";
+                if (this._slidesDirection === "vertical") {
+                    this._slidesParent.style.top = (direction === "next" ? startingPoint - i : startingPoint + i) + "vh";
                 } else {
-                    this.slidesParent.style.left = (direction === "next" ? startingPoint - i : startingPoint + i) + "vw";
+                    this._slidesParent.style.left = (direction === "next" ? startingPoint - i : startingPoint + i) + "vw";
                 }
     
                 if (i < scrollStep / 2) {
@@ -53,5 +36,23 @@ export default class SlideShow {
         };
     
         animateScroll();
+    }
+
+    previousSlide() {
+        if (this.#currentSlide > 0) {
+            this.#scrollSlide("previous");
+            this.#currentSlide--;
+        }
+    }
+
+    nextSlide() {
+        if (this.#currentSlide + 1 < this._slidesCount) {
+            this.#scrollSlide("next");
+            this.#currentSlide++;
+        }
+    }
+
+    get slidesDirection() {
+        return this._slidesDirection;
     }
 }

@@ -68,44 +68,32 @@ body {
             right: 0%;
         }
 
-        &.overlay-vertical {
+        .overlay-mixin(@width, @height, @prevGradient, @nextGradient) {
             > .previous-slide,
             > .next-slide {
-                width: 100%;
-                height: 25%;
+                width: @width;
+                height: @height;
             }
 
             > .previous-slide {
                 &:hover {
-                    background: linear-gradient(to bottom, @gradient-color-from, @gradient-color-to);
+                    background: linear-gradient(@prevGradient, @gradient-color-from, @gradient-color-to);
                 }
             }
 
             > .next-slide {
                 &:hover {
-                    background: linear-gradient(to top, @gradient-color-from, @gradient-color-to);
+                    background: linear-gradient(@nextGradient, @gradient-color-from, @gradient-color-to);
                 }
             }
         }
+
+        &.overlay-vertical {
+            .overlay-mixin(100%, 25%, to bottom, to top);
+        }
         
         &.overlay-horizontal {
-            > .previous-slide,
-            > .next-slide {
-                width: 25%;
-                height: 100%;
-            }
-
-            > .previous-slide {
-                &:hover {
-                    background: linear-gradient(to right, @gradient-color-from, @gradient-color-to);
-                }
-            }
-
-            > .next-slide {
-                &:hover {
-                    background: linear-gradient(to left, @gradient-color-from, @gradient-color-to);
-                }
-            }
+            .overlay-mixin(25%, 100%, to right, to left);
         }
     }
 }
