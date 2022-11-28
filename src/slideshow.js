@@ -1,10 +1,14 @@
 export default class SlideShow {
     #currentSlide = 0;
 
-    constructor() {
+    constructor(currentSlide) {
         this._slidesParent = document.getElementsByClassName("slides")[0];
         this._slidesDirection = this._slidesParent.classList.contains("slides-horizontal") ? "horizontal" : "vertical";
         this._slidesCount = document.getElementsByClassName("slide").length;
+        if (currentSlide && currentSlide > 1) {
+            this.#currentSlide = currentSlide - 2;
+            this.nextSlide();
+        }
     }
 
     #scrollSlide(direction) {
@@ -54,5 +58,13 @@ export default class SlideShow {
 
     get slidesDirection() {
         return this._slidesDirection;
+    }
+
+    isBeginning() {
+        return this.#currentSlide === 0;
+    }
+
+    isEnding() {
+        return this.#currentSlide + 1 === this._slidesCount;
     }
 }
