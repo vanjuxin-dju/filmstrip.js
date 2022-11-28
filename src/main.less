@@ -63,6 +63,21 @@ html, body {
             box-sizing: border-box;
             margin-top: -1.5rem;
             margin-left: -1.5rem;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0% {
+                filter: opacity(0.3);
+            }
+
+            50% {
+                filter: opacity(1);
+            }
+
+            100% {
+                filter: opacity(0.3);
+            }
         }
 
         > .previous-slide,
@@ -74,7 +89,7 @@ html, body {
             }
 
             &.disabled {
-                display: none;
+                visibility: hidden;
             }
         }
 
