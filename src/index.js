@@ -2,18 +2,56 @@ import "./main.less";
 import SlideShow from "./slideshow";
 import Overlay from "./overlay";
 
-let slideShow = new SlideShow();
+const currentSlide = () => {
+    let hash = window.location.hash;
+    hash = hash ? hash.substring(1) : hash;
+    const currentSlide = parseInt(hash);
+    window.location.hash = '';
+    if(Number.isNaN(currentSlide)) {
+        return 1;
+    } else {
+        return currentSlide;
+    }
+}
+
+let slideShow = new SlideShow(currentSlide());
 let overlay = new Overlay(slideShow.slidesDirection);
-overlay.addPreviousSlideClickListener(() => slideShow.previousSlide());
-overlay.addNextSlideClickListener(() => slideShow.nextSlide());
+const previousSlide = () => {
+    slideShow.previousSlide();
+    if (slideShow.isBeginning()) {
+        overlay.disablePreviousButton();
+    }
+    if (overlay.isDisabledNextButton()) {
+        overlay.enableNextButton();
+    }
+}
+const nextSlide = () => {
+    slideShow.nextSlide();
+    if (slideShow.isEnding()) {
+        overlay.disableNextButton();
+    }
+    if (overlay.isDisabledPreviousButton()) {
+        overlay.enablePreviousButton();
+    }
+}
+
+overlay.addPreviousSlideClickListener(previousSlide);
+overlay.addNextSlideClickListener(nextSlide);
+
+if (slideShow.isBeginning()) {
+    overlay.disablePreviousButton();
+}
+if (slideShow.isEnding()) {
+    overlay.disableNextButton();
+}
 
 const PREVIOUS_KEY_CODES = new Set(["ArrowLeft", "ArrowUp"]);
 const NEXT_KEY_CODES = new Set(["ArrowRight", "ArrowDown", "Space", "Enter"]);
 document.addEventListener("keyup", (event) => {
     if (PREVIOUS_KEY_CODES.has(event.code)) {
-        slideShow.previousSlide();
+        previousSlide();
     } else if (NEXT_KEY_CODES.has(event.code)) {
-        slideShow.nextSlide();
+        nextSlide();
     }
 });
 
@@ -23,9 +61,9 @@ document.addEventListener("keyup", (event) => {
     
     const checkDirection = () => {
         if (touchEnd < touchStart) {
-            slideShow.nextSlide();
+            nextSlide();
         } else if (touchEnd > touchStart) {
-            slideShow.previousSlide();
+            previousSlide();
         }
     }
 
@@ -38,3 +76,4 @@ document.addEventListener("keyup", (event) => {
         checkDirection();
     })
 })(slideShow.slidesDirection);
+
