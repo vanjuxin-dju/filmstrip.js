@@ -1,7 +1,5 @@
 @bg-color: #f5f5ee;
-@gradient-color-from: rgba(214, 222, 230, 0.2);
-@gradient-color-to: rgba(214, 222, 230, 0.01);
-@arrow-color: rgba(214, 222, 230, 0.7);
+@arrow-color: rgba(214, 222, 230, 0.8);
 
 html, body {
     margin: 0;
@@ -68,7 +66,7 @@ html, body {
 
         @keyframes blink {
             0% {
-                filter: opacity(0.3);
+                filter: opacity(0.4);
             }
 
             50% {
@@ -76,16 +74,15 @@ html, body {
             }
 
             100% {
-                filter: opacity(0.3);
+                filter: opacity(0.4);
             }
         }
 
         > .previous-slide,
         > .next-slide {
             position: absolute;
-            cursor: pointer;
-            &:hover {
-                background-color: rgba(214, 222, 230, 0.3);
+            .arrow {
+                cursor: pointer;
             }
 
             &.disabled {
@@ -103,7 +100,7 @@ html, body {
             right: 0%;
         }
 
-        .overlay-mixin(@width, @height, @prevGradient, @nextGradient, @arrowPrev, @arrowNext) {
+        .overlay-mixin(@width, @height, @arrowPrev, @arrowNext) {
             > .previous-slide,
             > .next-slide {
                 width: @width;
@@ -111,18 +108,12 @@ html, body {
             }
 
             > .previous-slide {
-                &:hover {
-                    background: linear-gradient(@prevGradient, @gradient-color-from, @gradient-color-to);
-                }
                 > .arrow {
                     transform: rotate(@arrowPrev);
                 }
             }
 
             > .next-slide {
-                &:hover {
-                    background: linear-gradient(@nextGradient, @gradient-color-from, @gradient-color-to);
-                }
                 > .arrow {
                     transform: rotate(@arrowNext);
                 }
@@ -130,11 +121,11 @@ html, body {
         }
 
         &.overlay-vertical {
-            .overlay-mixin(100%, 10%, to bottom, to top, -45deg, 135deg);
+            .overlay-mixin(100%, 10%, -45deg, 135deg);
         }
         
         &.overlay-horizontal {
-            .overlay-mixin(10%, 100%, to right, to left, -135deg, 45deg);
+            .overlay-mixin(10%, 100%, -135deg, 45deg);
         }
     }
 }
