@@ -4,6 +4,7 @@ export default class SlideShow {
     constructor(currentSlide) {
         this._slidesParent = document.getElementsByClassName("slides")[0];
         this._slidesDirection = this._slidesParent.classList.contains("slides-horizontal") ? "horizontal" : "vertical";
+        this._separateSlides = this._slidesParent.classList.contains("slides-separate");
         this._slidesCount = document.getElementsByClassName("slide").length;
         if (currentSlide && currentSlide > 1) {
             this.#currentSlide = currentSlide - 2;
@@ -38,8 +39,51 @@ export default class SlideShow {
                 }
             }, 20);
         };
-    
-        animateScroll();
+
+        const animateSlideOffScreen = (reverse) => {
+            setTimeout(() => {
+                if (this._slidesDirection === "vertical") {
+                    this._slidesParent.style.top = (reverse ? 100 - i : i) + "vh";
+                } else {
+                    this._slidesParent.style.left = (reverse ? 100 - i : i) + "vw";
+                }
+                if (i < scrollStep / 2) {
+                    step++;
+                } else {
+                    if (step > 1) {
+                        step--;
+                    }
+                }
+                i += step;
+
+                if (reverse) {
+                    if (i <= scrollStep) {
+                        animateSlideOffScreen(true);
+                    }
+                } else {
+                    if (i <= scrollStep) {
+                        animateSlideOffScreen(false);
+                    } else {
+                        if (this._slidesDirection === "vertical") {
+                            this._slidesParent.style.left = (direction === "next" ? startingPoint - 100 : startingPoint + 100) + "vw";
+                        } else {
+                            this._slidesParent.style.top = (direction === "next" ? startingPoint - 100 : startingPoint + 100) + "vh";
+                        }
+                        
+                        step = 1;
+                        i = 1;
+                        animateSlideOffScreen(true);
+                    }
+                }
+            }, 20);
+        };
+
+        if (this._separateSlides) {
+            animateSlideOffScreen();
+        } else {
+            animateScroll();
+        }
+        
     }
 
     previousSlide() {

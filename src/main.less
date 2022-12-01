@@ -21,10 +21,10 @@ html, body {
         top: 0vh;
         display: flex;
         flex-wrap: nowrap;
-        &.slides-vertical {
+        &.slides-vertical, &.slides-horizontal.slides-separate {
             flex-direction: column;
         }
-        &.slides-horizontal {
+        &.slides-horizontal, &.slides-vertical.slides-separate {
             flex-direction: row;
         }
         > section.slide {
