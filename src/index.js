@@ -46,7 +46,7 @@ if (slideShow.isEnding()) {
 }
 
 const PREVIOUS_KEY_CODES = new Set(["ArrowLeft", "ArrowUp"]);
-const NEXT_KEY_CODES = new Set(["ArrowRight", "ArrowDown", "Space", "Enter"]);
+const NEXT_KEY_CODES = new Set(["ArrowRight", "ArrowDown", "Space", "Enter", "NumpadEnter"]);
 document.addEventListener("keyup", (event) => {
     if (PREVIOUS_KEY_CODES.has(event.code)) {
         previousSlide();
