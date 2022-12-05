@@ -5,6 +5,7 @@ export default class SlideShow {
         this._slidesParent = document.getElementsByClassName("slides")[0];
         this._slidesDirection = this._slidesParent.classList.contains("slides-horizontal") ? "horizontal" : "vertical";
         this._separateSlides = this._slidesParent.classList.contains("slides-separate");
+        this._offScreenDirection = this._slidesParent.classList.contains("slides-separate-up-left") ? "up-left" : "down-right";
         this._slidesCount = document.getElementsByClassName("slide").length;
         if (currentSlide && currentSlide > 1) {
             this.#currentSlide = currentSlide - 2;
@@ -43,9 +44,9 @@ export default class SlideShow {
         const animateSlideOffScreen = (reverse) => {
             setTimeout(() => {
                 if (this._slidesDirection === "vertical") {
-                    this._slidesParent.style.top = (reverse ? 100 - i : i) + "vh";
+                    this._slidesParent.style.top = (this._offScreenDirection === "up-left" ? "-" : "") + (reverse ? 100 - i : i) + "vh";
                 } else {
-                    this._slidesParent.style.left = (reverse ? 100 - i : i) + "vw";
+                    this._slidesParent.style.left = (this._offScreenDirection === "up-left" ? "-" : "") + (reverse ? 100 - i : i) + "vw";
                 }
                 if (i < scrollStep / 2) {
                     step++;
