@@ -3,9 +3,16 @@ export default class SlideShow {
 
     constructor(currentSlide) {
         this._slidesParent = document.getElementsByClassName("slides")[0];
-        this._slidesDirection = this._slidesParent.classList.contains("slides-horizontal") ? "horizontal" : "vertical";
         this._separateSlides = this._slidesParent.classList.contains("slides-separate");
-        this._offScreenDirection = this._slidesParent.classList.contains("slides-separate-up-left") ? "up-left" : "down-right";
+        if (this._separateSlides) {
+            this._slidesDirection = this._slidesParent.classList.contains("slides-separate-up") ? "up" :
+                                    this._slidesParent.classList.contains("slides-separate-right") ? "right" :
+                                    this._slidesParent.classList.contains("slides-separate-left") ? "left" : "down";
+
+        } else {
+            this._slidesDirection = this._slidesParent.classList.contains("slides-horizontal") ? "horizontal" : "vertical";
+        }
+
         this._slidesCount = document.getElementsByClassName("slide").length;
         if (currentSlide && currentSlide > 1) {
             this.#currentSlide = currentSlide - 2;
@@ -43,11 +50,16 @@ export default class SlideShow {
 
         const animateSlideOffScreen = (reverse) => {
             setTimeout(() => {
-                if (this._slidesDirection === "vertical") {
-                    this._slidesParent.style.top = (this._offScreenDirection === "up-left" ? "-" : "") + (reverse ? 100 - i : i) + "vh";
+                if (this._slidesDirection === "up") {
+                    this._slidesParent.style.top = -(reverse ? 100 - i : i) + "vh";
+                } else if (this._slidesDirection === "right") {
+                    this._slidesParent.style.left = (reverse ? 100 - i : i) + "vw";
+                } else if (this._slidesDirection === "left") {
+                    this._slidesParent.style.left = -(reverse ? 100 - i : i) + "vw";
                 } else {
-                    this._slidesParent.style.left = (this._offScreenDirection === "up-left" ? "-" : "") + (reverse ? 100 - i : i) + "vw";
+                    this._slidesParent.style.top = (reverse ? 100 - i : i) + "vh";
                 }
+
                 if (i < scrollStep / 2) {
                     step++;
                 } else {
@@ -65,7 +77,7 @@ export default class SlideShow {
                     if (i <= scrollStep) {
                         animateSlideOffScreen(false);
                     } else {
-                        if (this._slidesDirection === "vertical") {
+                        if (this._slidesDirection === "up" || this._slidesDirection === "down") {
                             this._slidesParent.style.left = (direction === "next" ? startingPoint - 100 : startingPoint + 100) + "vw";
                         } else {
                             this._slidesParent.style.top = (direction === "next" ? startingPoint - 100 : startingPoint + 100) + "vh";
