@@ -21,10 +21,10 @@ html, body {
         top: 0vh;
         display: flex;
         flex-wrap: nowrap;
-        &.slides-vertical, &.slides-horizontal.slides-separate {
+        &.slides-vertical, &.slides-separate.slides-separate-left, &.slides-separate.slides-separate-right {
             flex-direction: column;
         }
-        &.slides-horizontal, &.slides-vertical.slides-separate {
+        &.slides-horizontal, &.slides-separate, &.slides-separate.slides-separate-up, &.slides-separate.slides-separate-down {
             flex-direction: row;
         }
         > section.slide {
@@ -120,11 +120,11 @@ html, body {
             }
         }
 
-        &.overlay-vertical {
+        &.overlay-vertical, &.overlay-up, &.overlay-down {
             .overlay-mixin(100%, 10%, -45deg, 135deg);
         }
         
-        &.overlay-horizontal {
+        &.overlay-horizontal, &.overlay-left, &.overlay-right {
             .overlay-mixin(10%, 100%, -135deg, 45deg);
         }
     }
