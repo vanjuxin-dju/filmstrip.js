@@ -10,7 +10,7 @@ export default class SlideShow {
                                     this._slidesParent.classList.contains("slides-separate-left") ? "left" : "down";
 
         } else {
-            this._slidesDirection = this._slidesParent.classList.contains("slides-horizontal") ? "horizontal" : "vertical";
+            this._slidesDirection = this._slidesParent.classList.contains("slides-filmstrip-horizontal") ? "horizontal" : "vertical";
         }
 
         this._slidesCount = document.getElementsByClassName("slide").length;

@@ -68,11 +68,11 @@ document.addEventListener("keyup", (event) => {
     }
 
     document.addEventListener('touchstart', e => {
-        touchStart = direction === "vertical" ? e.changedTouches[0].screenY : e.changedTouches[0].screenX;
+        touchStart = (direction === "vertical" || direction === "up" || direction === "down") ? e.changedTouches[0].screenY : e.changedTouches[0].screenX;
     })
 
     document.addEventListener('touchend', e => {
-        touchEnd = direction === "vertical" ? e.changedTouches[0].screenY : e.changedTouches[0].screenX;
+        touchEnd = (direction === "vertical" || direction === "up" || direction === "down") ? e.changedTouches[0].screenY : e.changedTouches[0].screenX;
         checkDirection();
     })
 })(slideShow.slidesDirection);
