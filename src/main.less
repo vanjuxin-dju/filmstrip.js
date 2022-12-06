@@ -21,12 +21,27 @@ html, body {
         top: 0vh;
         display: flex;
         flex-wrap: nowrap;
-        &.slides-filmstrip-vertical, &.slides-separate.slides-separate-left, &.slides-separate.slides-separate-right {
+        flex-direction: column;
+        &.slides-filmstrip {
             flex-direction: column;
+            &.slides-filmstrip-vertical {
+                flex-direction: column;
+            }
+            &.slides-filmstrip-horizontal {
+                flex-direction: row;
+            }
         }
-        &.slides-filmstrip-horizontal, &.slides-separate, &.slides-separate.slides-separate-up, &.slides-separate.slides-separate-down {
+
+        &.slides-separate {
             flex-direction: row;
+            &.slides-separate-left, &.slides-separate-right {
+                flex-direction: column;
+            }
+            &.slides-separate-up, &.slides-separate-down {
+                flex-direction: row;
+            }
         }
+
         > section.slide {
             height: 100vh;
             width: 100vw;
