@@ -3,8 +3,8 @@ export default class SlideShow {
 
     constructor(currentSlide) {
         this._slidesParent = document.getElementsByClassName("slides")[0];
-        this._separateSlides = this._slidesParent.classList.contains("slides-separate");
-        if (this._separateSlides) {
+        this._slideshowStyle = this._slidesParent.classList.contains("slides-separate") ? "separate" : "filmstrip";
+        if (this._slideshowStyle === "separate") {
             this._slidesDirection = this._slidesParent.classList.contains("slides-separate-up") ? "up" :
                                     this._slidesParent.classList.contains("slides-separate-right") ? "right" :
                                     this._slidesParent.classList.contains("slides-separate-left") ? "left" : "down";
@@ -91,7 +91,7 @@ export default class SlideShow {
             }, 20);
         };
 
-        if (this._separateSlides) {
+        if (this._slideshowStyle === "separate") {
             animateSlideOffScreen();
         } else {
             animateScroll();

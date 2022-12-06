@@ -34,8 +34,9 @@ You can add some other classes to the root element:
 
 |            Class              |                                               Description                                                 |
 |-------------------------------|-----------------------------------------------------------------------------------------------------------|
-| `slides-filmstrip-vertical`   | Makes your presentation look like a diafilm filmstrip with vertical scrolling (default if not set).       |
-| `slides-filmstrip-horizontal` | Makes your presentation look like a diafilm filmstrip with horizontal scrolling.                          |
+| `slides-filmstrip`            | Makes your presentation look like a diafilm filmstrip (default if not set).                               |
+| `slides-filmstrip-vertical`   | Is used along with `slides-filmstrip` class. Sets up vertical scrolling (default if not set).             |
+| `slides-filmstrip-horizontal` | Is used along with `slides-filmstrip` class. Sets up horizontal scrolling.                                |
 | `slides-separate`             | Makes your presentation look like a diapositive slideshow.                                                |
 | `slides-separate-down`        | Is used along with `slides-separate` class. Sets up an animation direction to down (default if not set).  |
 | `slides-separate-up`          | Is used along with `slides-separate` class. Sets up an animation direction to up.                         |
