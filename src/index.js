@@ -1,4 +1,5 @@
 import "./main.less";
+import "./slide-styles.less";
 import SlideShow from "./slideshow";
 import Overlay from "./overlay";
 

@@ -1,0 +1,138 @@
+.filmstrip section.slide > .slide-content {
+    h1 {
+        @media (orientation: landscape) {
+            font-size: 10vh;
+        }
+        @media (orientation: portrait) {
+            font-size: 10vw;
+        }
+
+        margin-top: 3vh;
+        margin-bottom: 3vh;
+
+        &.header-huge {
+            @media (orientation: landscape) {
+                font-size: 14vh;
+            }
+            @media (orientation: portrait) {
+                font-size: 14vw;
+            }
+
+            margin-top: 4vh;
+            margin-bottom: 4vh;
+        }
+    }
+
+    h2 {
+        @media (orientation: landscape) {
+            font-size: 8vh;
+        }
+        @media (orientation: portrait) {
+            font-size: 8vw;
+        }
+
+        margin-top: 3vh;
+        margin-bottom: 3vh;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .text-left {
+        text-align: left;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    ul, ol {
+        @media (orientation: landscape) {
+            font-size: 4vh;
+        }
+        @media (orientation: portrait) {
+            font-size: 4vw;
+        }
+
+        margin-top: 3vh;
+        margin-bottom: 3vh;
+
+        &.no-markers {
+            list-style-type: none;
+        }
+    }
+
+    ul {
+        list-style-type: disc;
+
+        &.disc-list {
+            list-style-type: disc;
+        }
+        &.circle-list {
+            list-style-type: circle;
+        }
+        &.square-list {
+            list-style-type: square;
+        }
+        &.triangle-list {
+            list-style-type: '\25BA';
+        }
+    }
+
+    ol {
+        list-style-type: decimal;
+
+        &.decimal-list {
+            list-style-type: decimal;
+        }
+        &.upper-roman-list {
+            list-style-type: upper-roman;
+        }
+        &.lower-roman-list {
+            list-style-type: lower-roman;
+        }
+        &.upper-latin-letters {
+            list-style-type: upper-alpha;
+        }
+        &.lower-latin-letters {
+            list-style-type: lower-alpha;
+        }
+    }
+
+    p {
+        @media (orientation: landscape) {
+            font-size: 4vh;
+        }
+        @media (orientation: portrait) {
+            font-size: 4vw;
+        }
+
+        margin-top: 3vh;
+        margin-bottom: 3vh;
+
+        &.p-small {
+            @media (orientation: landscape) {
+                font-size: 3vh;
+            }
+            @media (orientation: portrait) {
+                font-size: 3vw;
+            }
+        }
+        &.p-big {
+            @media (orientation: landscape) {
+                font-size: 5vh;
+            }
+            @media (orientation: portrait) {
+                font-size: 5vw;
+            }
+        }
+        &.p-image {
+            text-align: center;
+            > img {
+                max-height: 45vh;
+                max-width: 100%;
+            }
+        }
+    }
+}
