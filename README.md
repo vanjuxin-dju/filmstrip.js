@@ -58,3 +58,16 @@ Slide content can contain such tags as:
 
 All block tags can also have such classes as `text-left`, `text-center`, or `text-right`, depending on how you would like to align your text.
 
+## Slide formats
+There are the following slide formats:
+
+| Format | Class | Description |
+|--------|-------|-------------|
+| Flexible | `slide-format-flexible` | Your presentation or a specific slide fills the full web view (default for the whole presentation, the class helps a specific slide to revert to defaults). |
+| 4:3 landscape | `slide-format-4-3-landscape` | Your presentation or a specific slide has 4:3 aspect ratio and a landscape orientation. |
+| 16:9 landscape | `slide-format-16-9-landscape` | Your presentation or a specific slide has 16:9 aspect ratio and a landscape orientation. |
+| 4:3 portrait | `slide-format-4-3-portrait` | Your presentation or a specific slide has 4:3 aspect ratio and a portrait orientation. |
+| 16:9 portrait | `slide-format-16-9-portrait` | Your presentation or a specific slide has 16:9 aspect ratio and a portrait orientation. |
+| Square | `slide-format-square` | Your presentation or a specific slide has a square form. |
+
+These classes can be added either to the root div element (`<div class="slides">`) or to a specific slide element (`<section class="slide">`).
