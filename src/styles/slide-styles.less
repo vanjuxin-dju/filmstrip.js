@@ -15,6 +15,7 @@
         font-size: 8vmin;
         margin-top: 3vmin;
         margin-bottom: 3vmin;
+        color: @secondary-text;
     }
 
     .text-center {
@@ -33,6 +34,10 @@
         font-size: 4vmin;
         margin-top: 3vmin;
         margin-bottom: 3vmin;
+
+        li::marker {
+            color: @secondary-text;
+        }
 
         &.no-markers {
             list-style-type: none;

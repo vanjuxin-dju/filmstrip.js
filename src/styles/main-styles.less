@@ -1,6 +1,3 @@
-@bg-color: rgb(250, 250, 246);
-@arrow-color: rgba(214, 222, 230, 0.8);
-
 html, body {
     margin: 0;
     background-color: @bg-color;
@@ -54,6 +51,8 @@ html, body {
                 height: 100%;
                 box-sizing: border-box;
                 background-color: @bg-color;
+                background-image: radial-gradient(@bg-color-from, @bg-color);
+                color: @primary-text;
                 border-radius: 2vmin;
             }
         }
