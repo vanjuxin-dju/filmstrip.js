@@ -11,6 +11,36 @@ export default class SlideShow {
 
         } else {
             this._slidesDirection = this._slidesParent.classList.contains("slides-filmstrip-horizontal") ? "horizontal" : "vertical";
+
+            this._slidesMainFormat = this._slidesParent.classList.contains("slide-format-4-3-landscape") ? "4:3-landscape" :
+                                     this._slidesParent.classList.contains("slide-format-16-9-landscape") ? "16:9-landscape" :
+                                     this._slidesParent.classList.contains("slide-format-4-3-portrait") ? "4:3-portrait" :
+                                     this._slidesParent.classList.contains("slide-format-16-9-portrait") ? "16:9-portrait" :
+                                     this._slidesParent.classList.contains("slide-format-square") ? "square" : "flexible";
+            if (this.#hasSpecificFormat(this._slidesParent) && this._slidesParent.classList.contains("show-perforation")) {
+                switch (this._slidesMainFormat) {
+                    case "4:3-landscape":
+                        this.#addPerforation(this._slidesDirection === "vertical" ? 4 : 8);
+                        break;
+                    
+                    case "square":
+                        this.#addPerforation(4);
+                        break;
+
+                    case "16:9-landscape":
+                        this.#addPerforation(this._slidesDirection === "vertical" ? 3 : 12);
+                        break;
+
+                    case "4:3-portrait":
+                        //this.#addPerforation(4); TODO
+                        break;
+
+                    case "16:9-portrait":
+                        //this.#addPerforation(3); TODO
+                        break;
+                }
+                
+            }
         }
 
         this._slidesCount = document.getElementsByClassName("slide").length;
@@ -18,6 +48,38 @@ export default class SlideShow {
             this.#currentSlide = currentSlide - 2;
             this.nextSlide();
         }
+    }
+
+    #addPerforation(count) {
+        let slides = this._slidesParent.children;
+        for (let i = 0; i < slides.length; i++) {
+            if (this.#hasSpecificFormat(slides[i])) {
+                return;
+            }
+        }
+
+        for (let i = 0; i < slides.length; i++) {
+            this.#addPerforationToSlide(slides[i], count)
+        }
+    }
+    
+    #addPerforationToSlide(slide, count) {
+        let perforationWrapper = document.createElement("div");
+        perforationWrapper.classList.add("perforation-wrapper");
+        slide.append(perforationWrapper);
+        for (let i = 1; i < count; i++) {
+            perforationWrapper = perforationWrapper.cloneNode(false);
+            slide.append(perforationWrapper);
+        }
+    }
+
+    #hasSpecificFormat(element) {
+        let classes = element.classList;
+        return  classes.contains("slide-format-4-3-landscape") || 
+                classes.contains("slide-format-16-9-landscape") ||
+                classes.contains("slide-format-4-3-portrait") ||
+                classes.contains("slide-format-16-9-portrait") ||
+                classes.contains("slide-format-square");
     }
 
     #scrollSlide(direction) {
