@@ -17,7 +17,7 @@ export default class SlideShow {
                                      this._slidesParent.classList.contains("slide-format-4-3-portrait") ? "4:3-portrait" :
                                      this._slidesParent.classList.contains("slide-format-16-9-portrait") ? "16:9-portrait" :
                                      this._slidesParent.classList.contains("slide-format-square") ? "square" : "flexible";
-            if (this.#hasSpecificFormat(this._slidesParent) && this._slidesParent.classList.contains("show-perforation")) {
+            if (this.#hasSpecificFormat(this._slidesParent) && this._slidesParent.classList.contains("show-perforations")) {
                 switch (this._slidesMainFormat) {
                     case "4:3-landscape":
                         this.#addPerforation(this._slidesDirection === "vertical" ? 4 : 8);
@@ -32,11 +32,11 @@ export default class SlideShow {
                         break;
 
                     case "4:3-portrait":
-                        //this.#addPerforation(4); TODO
+                        this.#addPerforation(this._slidesDirection === "vertical" ? 8 : 4);
                         break;
 
                     case "16:9-portrait":
-                        //this.#addPerforation(3); TODO
+                        this.#addPerforation(this._slidesDirection === "vertical" ? 12 : 3);
                         break;
                 }
                 

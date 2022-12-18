@@ -1,4 +1,4 @@
-.filmstrip > .slides.show-perforation {
+.filmstrip > .slides.show-perforations {
     .perforation-vertical-mixin() {
         content: " ";
         position: absolute;
@@ -59,6 +59,97 @@
                     .perforation-horizontal-mixin();
                     bottom: -18%;
                     left: 0%;
+                }
+            }
+        }
+    }
+
+
+    &.slide-format-4-3-portrait {
+        > section.slide {
+            > .perforation-wrapper {
+                height: 12.5%;
+                position: relative;
+                top: -100%;
+                
+                &::before {
+                    .perforation-vertical-mixin();
+                    left: -18%;
+                }
+
+                &::after {
+                    .perforation-vertical-mixin();
+                    right: -18%;
+                }
+            }
+        }
+
+        &.slides-filmstrip-horizontal {
+            > section.slide {
+                > .perforation-wrapper {
+                    height: 100%;
+                    width: 25%;
+                    margin: 0;
+                    position: relative;
+                    top: -100%;
+                    float: left;
+                    
+                    &::before {
+                        .perforation-horizontal-mixin();
+                        top: -18%;
+                        left: 0%;
+                    }
+    
+                    &::after {
+                        .perforation-horizontal-mixin();
+                        bottom: -18%;
+                        left: 0%;
+                    }
+                }
+            }
+        }
+    }
+
+    &.slide-format-16-9-portrait {
+        > section.slide {
+            > .perforation-wrapper {
+                height: 8.3333%;
+                position: relative;
+                top: -100%;
+                
+                &::before {
+                    .perforation-vertical-mixin();
+                    left: -18%;
+                }
+
+                &::after {
+                    .perforation-vertical-mixin();
+                    right: -18%;
+                }
+            }
+        }
+
+        &.slides-filmstrip-horizontal {
+            > section.slide {
+                > .perforation-wrapper {
+                    height: 100%;
+                    width: 33.3333%;
+                    margin: 0;
+                    position: relative;
+                    top: -100%;
+                    float: left;
+                    
+                    &::before {
+                        .perforation-horizontal-mixin();
+                        top: -18%;
+                        left: 0%;
+                    }
+    
+                    &::after {
+                        .perforation-horizontal-mixin();
+                        bottom: -18%;
+                        left: 0%;
+                    }
                 }
             }
         }

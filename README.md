@@ -121,3 +121,14 @@ There are the following color themes supported by this library:
 
 These classes can be added either to the root div element (`<div class="slides">`) or to a specific slide element (`<section class="slide">`).
 
+## Additional features
+
+### Perforations
+
+You can simply add a `show-perforations` class to the root div element (`<div class="slides">`).
+
+It will decorate your presentation with film perforations provided that your presentation type is a filmstrip and the whole presentation has a specific slide format (not flexible one).
+
+This type of decoration is shown in case there is some free space on the left and right sides (for vertical scrolling) or on the top and the bottom sides (for horizontal scrolling).
+
+**The perforations won't be shown if the presentation type is separate diapositive slideshow or some slides have different formats!**
