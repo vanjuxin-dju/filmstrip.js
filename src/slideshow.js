@@ -12,13 +12,13 @@ export default class SlideShow {
         } else {
             this._slidesDirection = this._slidesParent.classList.contains("slides-filmstrip-horizontal") ? "horizontal" : "vertical";
 
-            this._slidesMainFormat = this._slidesParent.classList.contains("slide-format-4-3-landscape") ? "4:3-landscape" :
-                                     this._slidesParent.classList.contains("slide-format-16-9-landscape") ? "16:9-landscape" :
-                                     this._slidesParent.classList.contains("slide-format-4-3-portrait") ? "4:3-portrait" :
-                                     this._slidesParent.classList.contains("slide-format-16-9-portrait") ? "16:9-portrait" :
-                                     this._slidesParent.classList.contains("slide-format-square") ? "square" : "flexible";
+            let slidesMainFormat = this._slidesParent.classList.contains("slide-format-4-3-landscape") ? "4:3-landscape" :
+                                   this._slidesParent.classList.contains("slide-format-16-9-landscape") ? "16:9-landscape" :
+                                   this._slidesParent.classList.contains("slide-format-4-3-portrait") ? "4:3-portrait" :
+                                   this._slidesParent.classList.contains("slide-format-16-9-portrait") ? "16:9-portrait" :
+                                   this._slidesParent.classList.contains("slide-format-square") ? "square" : "flexible";
             if (this.#hasSpecificFormat(this._slidesParent) && this._slidesParent.classList.contains("show-perforations")) {
-                switch (this._slidesMainFormat) {
+                switch (slidesMainFormat) {
                     case "4:3-landscape":
                         this.#addPerforation(this._slidesDirection === "vertical" ? 4 : 8);
                         break;
