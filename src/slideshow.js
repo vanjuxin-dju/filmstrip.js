@@ -3,6 +3,12 @@ export default class SlideShow {
 
     constructor(currentSlide) {
         this._slidesParent = document.getElementsByClassName("slides")[0];
+        this._isLoop = !!(this._slidesParent.dataset.loop);
+        if (this._isLoop) {
+            let firstSlideCopy = this._slidesParent.children[0].cloneNode(true);
+            this._slidesParent.append(firstSlideCopy);
+        }
+
         this._slideshowStyle = this._slidesParent.classList.contains("slides-separate") ? "separate" : "filmstrip";
         if (this._slideshowStyle === "separate") {
             this._slidesDirection = this._slidesParent.classList.contains("slides-separate-up") ? "up" :
@@ -109,6 +115,15 @@ export default class SlideShow {
                 i += step;
                 if (i <= scrollStep) {
                     animateScroll();
+                } else {
+                    if (this._isLoop && this.isEnding()) {
+                        this.#currentSlide = 0;
+                        if (this._slidesDirection === "vertical") {
+                            this._slidesParent.style.top = "0vh";
+                        } else {
+                            this._slidesParent.style.left = "0vw";
+                        }
+                    }
                 }
             }, 20);
         };
@@ -137,6 +152,15 @@ export default class SlideShow {
                 if (reverse) {
                     if (i <= scrollStep) {
                         animateSlideOffScreen(true);
+                    } else {
+                        if (this._isLoop && this.isEnding()) {
+                            this.#currentSlide = 0;
+                            if (this._slidesDirection === "up" || this._slidesDirection === "down") {
+                                this._slidesParent.style.left = "0vw";
+                            } else {
+                                this._slidesParent.style.top = "0vh";
+                            }
+                        }
                     }
                 } else {
                     if (i <= scrollStep) {
