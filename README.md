@@ -139,3 +139,8 @@ You can simply add a `data-switch-after="time in seconds"` attribute either to t
 
 It will automate flipping slides in your presentation. 
 
+### Slideshow loop
+
+You can simply add a `data-loop="loop"` attribute to the root div element (`<div class="slides">`).
+
+It will turn your presentation into a continuous slideshow.
