@@ -132,3 +132,10 @@ It will decorate your presentation with film perforations provided that your pre
 This type of decoration is shown in case there is some free space on the left and right sides (for vertical scrolling) or on the top and the bottom sides (for horizontal scrolling).
 
 **The perforations won't be shown if the presentation type is separate diapositive slideshow or some slides have different formats!**
+
+### Automated slides flipping
+
+You can simply add a `data-switch-after="time in seconds"` attribute either to the root div element (`<div class="slides">`) or to a specific slide element (`<section class="slide">`).
+
+It will automate flipping slides in your presentation. 
+
