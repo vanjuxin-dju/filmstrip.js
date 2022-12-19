@@ -43,6 +43,9 @@ export default class SlideShow {
             }
         }
 
+        this._automatedSwitchBetweenSlides = this._slidesParent.dataset.switchAfter;
+        this.#setAutomatedSwitch();
+
         this._slidesCount = document.getElementsByClassName("slide").length;
         if (currentSlide && currentSlide > 1) {
             this.#currentSlide = currentSlide - 2;
@@ -161,10 +164,27 @@ export default class SlideShow {
         
     }
 
+    #setAutomatedSwitch() {
+        clearTimeout(this._timer);
+        if (!this.isEnding()) {
+            const currentSlideElement = this._slidesParent.children[this.#currentSlide];
+            const time = currentSlideElement.dataset.switchAfter || this._automatedSwitchBetweenSlides;
+            const timeNumber = parseInt(time);
+            if (Number.isNaN(timeNumber) || timeNumber <= 0) {
+                return;
+            }
+            this._timer = setTimeout(() => {
+                this.nextSlide();
+            }, timeNumber * 1000);
+            console.log(timeNumber);
+        }
+    }
+
     previousSlide() {
         if (this.#currentSlide > 0) {
             this.#scrollSlide("previous");
             this.#currentSlide--;
+            this.#setAutomatedSwitch();
         }
     }
 
@@ -172,6 +192,7 @@ export default class SlideShow {
         if (this.#currentSlide + 1 < this._slidesCount) {
             this.#scrollSlide("next");
             this.#currentSlide++;
+            this.#setAutomatedSwitch();
         }
     }
 

@@ -18,32 +18,13 @@ let slideShow = new SlideShow(currentSlide());
 let overlay = new Overlay(slideShow.slidesDirection);
 const previousSlide = () => {
     slideShow.previousSlide();
-    if (slideShow.isBeginning()) {
-        overlay.disablePreviousButton();
-    }
-    if (overlay.isDisabledNextButton()) {
-        overlay.enableNextButton();
-    }
 }
 const nextSlide = () => {
     slideShow.nextSlide();
-    if (slideShow.isEnding()) {
-        overlay.disableNextButton();
-    }
-    if (overlay.isDisabledPreviousButton()) {
-        overlay.enablePreviousButton();
-    }
 }
 
 overlay.addPreviousSlideClickListener(previousSlide);
 overlay.addNextSlideClickListener(nextSlide);
-
-if (slideShow.isBeginning()) {
-    overlay.disablePreviousButton();
-}
-if (slideShow.isEnding()) {
-    overlay.disableNextButton();
-}
 
 const PREVIOUS_KEY_CODES = new Set(["ArrowLeft", "ArrowUp"]);
 const NEXT_KEY_CODES = new Set(["ArrowRight", "ArrowDown", "Space", "Enter", "NumpadEnter"]);
