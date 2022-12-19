@@ -190,7 +190,7 @@ export default class SlideShow {
 
     #setAutomatedSwitch() {
         clearTimeout(this._timer);
-        if (!this.isEnding()) {
+        if (!this.isEnding() || (this._isLoop && this.isEnding())) {
             const currentSlideElement = this._slidesParent.children[this.#currentSlide];
             const time = currentSlideElement.dataset.switchAfter || this._automatedSwitchBetweenSlides;
             const timeNumber = parseInt(time);
