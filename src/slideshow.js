@@ -176,7 +176,6 @@ export default class SlideShow {
             this._timer = setTimeout(() => {
                 this.nextSlide();
             }, timeNumber * 1000);
-            console.log(timeNumber);
         }
     }
 
