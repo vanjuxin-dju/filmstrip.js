@@ -58,7 +58,13 @@
                 list-style-type: square;
             }
             &.triangle-list {
-                list-style-type: '\25BA';
+                list-style-type: '\25BA ';
+            }
+            &.plus-list {
+                list-style-type: '+ ';
+            }
+            &.minus-list {
+                list-style-type: '- ';
             }
         }
 
@@ -116,6 +122,29 @@
                         background-color: @bg-color;
                         border-radius: 0vmin 0vmin 2vmin 2vmin;
                     }
+                }
+            }
+        }
+
+        ol, ul, p {
+            &.two-column {
+                margin-top: 2vmin;
+                margin-bottom: 2vmin;
+                width: 50%;
+                box-sizing: border-box;
+
+                &.column-left {
+                    clear: left;
+                    float: left;
+                }
+
+                &.column-right {
+                    clear: right;
+                    float: right;
+                }
+
+                + p {
+                    clear: both;
                 }
             }
         }
