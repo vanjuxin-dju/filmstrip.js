@@ -1,58 +1,60 @@
+import UTIL from "./util";
+
 export default class SlideShow {
     #currentSlide = 0;
 
     constructor(currentSlide) {
-        this._slidesParent = document.getElementsByClassName("slides")[0];
-        this._isLoop = !!(this._slidesParent.dataset.loop);
+        this._parent = document.getElementsByClassName(UTIL.CLASSES.SLIDES)[0];
+        this._isLoop = !!(this._parent.dataset.loop);
         if (this._isLoop) {
-            let firstSlideCopy = this._slidesParent.children[0].cloneNode(true);
-            this._slidesParent.append(firstSlideCopy);
+            let firstSlideCopy = this._parent.children[0].cloneNode(true);
+            this._parent.append(firstSlideCopy);
         }
 
-        this._slideshowStyle = this._slidesParent.classList.contains("slides-separate") ? "separate" : "filmstrip";
-        if (this._slideshowStyle === "separate") {
-            this._slidesDirection = this._slidesParent.classList.contains("slides-separate-up") ? "up" :
-                                    this._slidesParent.classList.contains("slides-separate-right") ? "right" :
-                                    this._slidesParent.classList.contains("slides-separate-left") ? "left" : "down";
+        this._slideshowStyle = this.#parentHasClass(UTIL.CLASSES.SLIDES_SEPARATE) ? UTIL.SLIDESHOW_TYPE.SEPARATE : UTIL.SLIDESHOW_TYPE.FILMSTRIP;
+        if (this._slideshowStyle === UTIL.SLIDESHOW_TYPE.SEPARATE) {
+            this._slidesDirection = this.#parentHasClass(UTIL.CLASSES.SLIDES_SEPARATE_UP) ? UTIL.SEPARATE_SLIDES_DIRECTION.UP :
+                                    this.#parentHasClass(UTIL.CLASSES.SLIDES_SEPARATE_RIGHT) ? UTIL.SEPARATE_SLIDES_DIRECTION.RIGHT :
+                                    this.#parentHasClass(UTIL.CLASSES.SLIDES_SEPARATE_LEFT) ? UTIL.SEPARATE_SLIDES_DIRECTION.LEFT : UTIL.SEPARATE_SLIDES_DIRECTION.DOWN;
 
         } else {
-            this._slidesDirection = this._slidesParent.classList.contains("slides-filmstrip-horizontal") ? "horizontal" : "vertical";
+            this._slidesDirection = this.#parentHasClass(UTIL.CLASSES.SLIDES_FILMSTRIP_HORIZONTAL) ? UTIL.FILMSTRIP_DIRECTION.HORIZONTAL : UTIL.FILMSTRIP_DIRECTION.VERTICAL;
 
-            let slidesMainFormat = this._slidesParent.classList.contains("slide-format-4-3-landscape") ? "4:3-landscape" :
-                                   this._slidesParent.classList.contains("slide-format-16-9-landscape") ? "16:9-landscape" :
-                                   this._slidesParent.classList.contains("slide-format-4-3-portrait") ? "4:3-portrait" :
-                                   this._slidesParent.classList.contains("slide-format-16-9-portrait") ? "16:9-portrait" :
-                                   this._slidesParent.classList.contains("slide-format-square") ? "square" : "flexible";
-            if (this.#hasSpecificFormat(this._slidesParent) && this._slidesParent.classList.contains("show-perforations")) {
+            let slidesMainFormat =  this.#parentHasClass(UTIL.CLASSES.SLIDE_FORMAT_4_3_LANDSCAPE) ? UTIL.SLIDE_FORMAT.LANDSCAPE_4_3 :
+                                    this.#parentHasClass(UTIL.CLASSES.SLIDE_FORMAT_16_9_LANDSCAPE) ? UTIL.SLIDE_FORMAT.LANDSCAPE_16_9 :
+                                    this.#parentHasClass(UTIL.CLASSES.SLIDE_FORMAT_4_3_PORTRAIT) ? UTIL.SLIDE_FORMAT.PORTRAIT_4_3 :
+                                    this.#parentHasClass(UTIL.CLASSES.SLIDE_FORMAT_16_9_PORTRAIT) ? UTIL.SLIDE_FORMAT.PORTRAIT_16_9 :
+                                    this.#parentHasClass(UTIL.CLASSES.SLIDE_FORMAT_SQUARE) ? UTIL.SLIDE_FORMAT.SQUARE : UTIL.SLIDE_FORMAT.FLEXIBLE;
+            if (UTIL.hasSpecificFormat(this._parent) && this.#parentHasClass(UTIL.CLASSES.SHOW_PERFORATIONS)) {
                 switch (slidesMainFormat) {
-                    case "4:3-landscape":
-                        this.#addPerforation(this._slidesDirection === "vertical" ? 4 : 8);
+                    case UTIL.SLIDE_FORMAT.LANDSCAPE_4_3:
+                        this.#addPerforation(this._slidesDirection === UTIL.FILMSTRIP_DIRECTION.VERTICAL ? 4 : 8);
                         break;
                     
-                    case "square":
+                    case UTIL.SLIDE_FORMAT.SQUARE:
                         this.#addPerforation(4);
                         break;
 
-                    case "16:9-landscape":
-                        this.#addPerforation(this._slidesDirection === "vertical" ? 3 : 12);
+                    case UTIL.SLIDE_FORMAT.LANDSCAPE_16_9:
+                        this.#addPerforation(this._slidesDirection === UTIL.FILMSTRIP_DIRECTION.VERTICAL ? 3 : 12);
                         break;
 
-                    case "4:3-portrait":
-                        this.#addPerforation(this._slidesDirection === "vertical" ? 8 : 4);
+                    case UTIL.SLIDE_FORMAT.PORTRAIT_4_3:
+                        this.#addPerforation(this._slidesDirection === UTIL.FILMSTRIP_DIRECTION.VERTICAL ? 8 : 4);
                         break;
 
-                    case "16:9-portrait":
-                        this.#addPerforation(this._slidesDirection === "vertical" ? 12 : 3);
+                    case UTIL.SLIDE_FORMAT.PORTRAIT_16_9:
+                        this.#addPerforation(this._slidesDirection === UTIL.FILMSTRIP_DIRECTION.VERTICAL ? 12 : 3);
                         break;
                 }
                 
             }
         }
 
-        this._automatedSwitchBetweenSlides = this._slidesParent.dataset.switchAfter;
+        this._automatedSwitchBetweenSlides = this._parent.dataset.switchAfter;
         this.#setAutomatedSwitch();
 
-        this._slidesCount = document.getElementsByClassName("slide").length;
+        this._slidesCount = document.getElementsByClassName(UTIL.CLASSES.SLIDE).length;
         if (currentSlide && currentSlide > 1) {
             this.#currentSlide = currentSlide - 2;
             this.nextSlide();
@@ -60,35 +62,20 @@ export default class SlideShow {
     }
 
     #addPerforation(count) {
-        let slides = this._slidesParent.children;
+        let slides = this._parent.children;
         for (let i = 0; i < slides.length; i++) {
-            if (this.#hasSpecificFormat(slides[i])) {
+            if (UTIL.hasSpecificFormat(slides[i])) {
                 return;
             }
         }
 
         for (let i = 0; i < slides.length; i++) {
-            this.#addPerforationToSlide(slides[i], count)
-        }
-    }
-    
-    #addPerforationToSlide(slide, count) {
-        let perforationWrapper = document.createElement("div");
-        perforationWrapper.classList.add("perforation-wrapper");
-        slide.append(perforationWrapper);
-        for (let i = 1; i < count; i++) {
-            perforationWrapper = perforationWrapper.cloneNode(false);
-            slide.append(perforationWrapper);
+            UTIL.addPerforationToSlide(slides[i], count);
         }
     }
 
-    #hasSpecificFormat(element) {
-        let classes = element.classList;
-        return  classes.contains("slide-format-4-3-landscape") || 
-                classes.contains("slide-format-16-9-landscape") ||
-                classes.contains("slide-format-4-3-portrait") ||
-                classes.contains("slide-format-16-9-portrait") ||
-                classes.contains("slide-format-square");
+    #parentHasClass(className) {
+        return this._parent.classList.contains(className);
     }
 
     #scrollSlide(direction) {
@@ -99,10 +86,10 @@ export default class SlideShow {
     
         const animateScroll = () => {
             setTimeout(() => {
-                if (this._slidesDirection === "vertical") {
-                    this._slidesParent.style.top = (direction === "next" ? startingPoint - i : startingPoint + i) + "vh";
+                if (this._slidesDirection === UTIL.FILMSTRIP_DIRECTION.VERTICAL) {
+                    this._parent.style.top = (direction === UTIL.SWITCHES.NEXT ? startingPoint - i : startingPoint + i) + "vh";
                 } else {
-                    this._slidesParent.style.left = (direction === "next" ? startingPoint - i : startingPoint + i) + "vw";
+                    this._parent.style.left = (direction === UTIL.SWITCHES.NEXT ? startingPoint - i : startingPoint + i) + "vw";
                 }
     
                 if (i < scrollStep / 2) {
@@ -118,10 +105,10 @@ export default class SlideShow {
                 } else {
                     if (this._isLoop && this.isEnding()) {
                         this.#currentSlide = 0;
-                        if (this._slidesDirection === "vertical") {
-                            this._slidesParent.style.top = "0vh";
+                        if (this._slidesDirection === UTIL.FILMSTRIP_DIRECTION.VERTICAL) {
+                            this._parent.style.top = "0vh";
                         } else {
-                            this._slidesParent.style.left = "0vw";
+                            this._parent.style.left = "0vw";
                         }
                     }
                 }
@@ -130,14 +117,14 @@ export default class SlideShow {
 
         const animateSlideOffScreen = (reverse) => {
             setTimeout(() => {
-                if (this._slidesDirection === "up") {
-                    this._slidesParent.style.top = -(reverse ? 100 - i : i) + "vh";
-                } else if (this._slidesDirection === "right") {
-                    this._slidesParent.style.left = (reverse ? 100 - i : i) + "vw";
-                } else if (this._slidesDirection === "left") {
-                    this._slidesParent.style.left = -(reverse ? 100 - i : i) + "vw";
+                if (this._slidesDirection === UTIL.SEPARATE_SLIDES_DIRECTION.UP) {
+                    this._parent.style.top = -(reverse ? 100 - i : i) + "vh";
+                } else if (this._slidesDirection === UTIL.SEPARATE_SLIDES_DIRECTION.RIGHT) {
+                    this._parent.style.left = (reverse ? 100 - i : i) + "vw";
+                } else if (this._slidesDirection === UTIL.SEPARATE_SLIDES_DIRECTION.LEFT) {
+                    this._parent.style.left = -(reverse ? 100 - i : i) + "vw";
                 } else {
-                    this._slidesParent.style.top = (reverse ? 100 - i : i) + "vh";
+                    this._parent.style.top = (reverse ? 100 - i : i) + "vh";
                 }
 
                 if (i < scrollStep / 2) {
@@ -155,10 +142,10 @@ export default class SlideShow {
                     } else {
                         if (this._isLoop && this.isEnding()) {
                             this.#currentSlide = 0;
-                            if (this._slidesDirection === "up" || this._slidesDirection === "down") {
-                                this._slidesParent.style.left = "0vw";
+                            if (this._slidesDirection === UTIL.SEPARATE_SLIDES_DIRECTION.UP || this._slidesDirection === UTIL.SEPARATE_SLIDES_DIRECTION.DOWN) {
+                                this._parent.style.left = "0vw";
                             } else {
-                                this._slidesParent.style.top = "0vh";
+                                this._parent.style.top = "0vh";
                             }
                         }
                     }
@@ -166,10 +153,10 @@ export default class SlideShow {
                     if (i <= scrollStep) {
                         animateSlideOffScreen(false);
                     } else {
-                        if (this._slidesDirection === "up" || this._slidesDirection === "down") {
-                            this._slidesParent.style.left = (direction === "next" ? startingPoint - 100 : startingPoint + 100) + "vw";
+                        if (this._slidesDirection === UTIL.SEPARATE_SLIDES_DIRECTION.UP || this._slidesDirection === UTIL.SEPARATE_SLIDES_DIRECTION.DOWN) {
+                            this._parent.style.left = (direction === UTIL.SWITCHES.NEXT ? startingPoint - 100 : startingPoint + 100) + "vw";
                         } else {
-                            this._slidesParent.style.top = (direction === "next" ? startingPoint - 100 : startingPoint + 100) + "vh";
+                            this._parent.style.top = (direction === UTIL.SWITCHES.NEXT ? startingPoint - 100 : startingPoint + 100) + "vh";
                         }
                         
                         step = 1;
@@ -180,7 +167,7 @@ export default class SlideShow {
             }, 20);
         };
 
-        if (this._slideshowStyle === "separate") {
+        if (this._slideshowStyle === UTIL.SLIDESHOW_TYPE.SEPARATE) {
             animateSlideOffScreen();
         } else {
             animateScroll();
@@ -191,7 +178,7 @@ export default class SlideShow {
     #setAutomatedSwitch() {
         clearTimeout(this._timer);
         if (!this.isEnding() || (this._isLoop && this.isEnding())) {
-            const currentSlideElement = this._slidesParent.children[this.#currentSlide];
+            const currentSlideElement = this._parent.children[this.#currentSlide];
             const time = currentSlideElement.dataset.switchAfter || this._automatedSwitchBetweenSlides;
             const timeNumber = parseInt(time);
             if (Number.isNaN(timeNumber) || timeNumber <= 0) {
@@ -205,7 +192,7 @@ export default class SlideShow {
 
     previousSlide() {
         if (this.#currentSlide > 0) {
-            this.#scrollSlide("previous");
+            this.#scrollSlide(UTIL.SWITCHES.PREVIOUS);
             this.#currentSlide--;
             this.#setAutomatedSwitch();
         }
@@ -213,7 +200,7 @@ export default class SlideShow {
 
     nextSlide() {
         if (this.#currentSlide + 1 < this._slidesCount) {
-            this.#scrollSlide("next");
+            this.#scrollSlide(UTIL.SWITCHES.NEXT);
             this.#currentSlide++;
             this.#setAutomatedSwitch();
         }
