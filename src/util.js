@@ -15,6 +15,7 @@ classes.SLIDE_FORMAT_16_9_LANDSCAPE = slideFormat + "16-9-landscape";
 classes.SLIDE_FORMAT_4_3_PORTRAIT = slideFormat + "4-3-portrait";
 classes.SLIDE_FORMAT_16_9_PORTRAIT = slideFormat + "16-9-portrait";
 classes.SLIDE_FORMAT_SQUARE = slideFormat + "square";
+classes.SLIDE_FORMAT_FLEXIBLE = slideFormat + "flexible";
 
 classes.SHOW_PERFORATIONS = "show-perforations";
 classes.PERFORATION_WRAPPER = "perforation-wrapper";

@@ -63,10 +63,11 @@ export default class SlideShow {
 
     #addPerforation(count) {
         let slides = this._parent.children;
-        for (let i = 0; i < slides.length; i++) {
-            if (UTIL.hasSpecificFormat(slides[i])) {
-                return;
-            }
+        let slidesArray = [...slides];
+        let firstSlideIndexWithSpecificFormat = slidesArray.findIndex(slide => UTIL.hasSpecificFormat(slide) || slide.classList.contains(UTIL.CLASSES.SLIDE_FORMAT_FLEXIBLE));
+
+        if (firstSlideIndexWithSpecificFormat >= 0) {
+            return;
         }
 
         for (let i = 0; i < slides.length; i++) {
