@@ -1,9 +1,11 @@
 import UTIL from "./util";
+import ActionQueue from "./action-queue";
 
 export default class SlideShow {
     #currentSlide = 0;
 
     constructor(currentSlide) {
+        this._actionQueue = new ActionQueue(this);
         this._parent = document.getElementsByClassName(UTIL.CLASSES.SLIDES)[0];
         this._isLoop = !!(this._parent.dataset.loop);
         if (this._isLoop) {
@@ -79,7 +81,7 @@ export default class SlideShow {
         return this._parent.classList.contains(className);
     }
 
-    #scrollSlide(direction) {
+    #scrollSlide(direction, callback) {
         const scrollStep = 100;
         const startingPoint = this.#currentSlide * (-100);
         let step = 1;
@@ -112,6 +114,7 @@ export default class SlideShow {
                             this._parent.style.left = "0vw";
                         }
                     }
+                    callback();
                 }
             }, 20);
         };
@@ -149,6 +152,7 @@ export default class SlideShow {
                                 this._parent.style.top = "0vh";
                             }
                         }
+                        callback();
                     }
                 } else {
                     if (i <= scrollStep) {
@@ -167,6 +171,11 @@ export default class SlideShow {
                 }
             }, 20);
         };
+
+        if ((this.isBeginning() && direction === UTIL.SWITCHES.PREVIOUS) || (this.isEnding() && direction === UTIL.SWITCHES.NEXT)) {
+            callback();
+            return;
+        }
 
         if (this._slideshowStyle === UTIL.SLIDESHOW_TYPE.SEPARATE) {
             animateSlideOffScreen();
@@ -192,19 +201,23 @@ export default class SlideShow {
     }
 
     previousSlide() {
-        if (this.#currentSlide > 0) {
-            this.#scrollSlide(UTIL.SWITCHES.PREVIOUS);
-            this.#currentSlide--;
-            this.#setAutomatedSwitch();
-        }
+        clearTimeout(this._timer);
+        this._actionQueue.addAction(this.#scrollSlide, UTIL.SWITCHES.PREVIOUS, () => {
+            if (this.#currentSlide > 0) {
+                this.#currentSlide--;
+                this.#setAutomatedSwitch();
+            }
+        });
     }
 
     nextSlide() {
-        if (this.#currentSlide + 1 < this._slidesCount) {
-            this.#scrollSlide(UTIL.SWITCHES.NEXT);
-            this.#currentSlide++;
-            this.#setAutomatedSwitch();
-        }
+        clearTimeout(this._timer);
+        this._actionQueue.addAction(this.#scrollSlide, UTIL.SWITCHES.NEXT, () => {
+            if (this.#currentSlide + 1 < this._slidesCount) {
+                this.#currentSlide++;
+                this.#setAutomatedSwitch();
+            }
+        });
     }
 
     get slidesDirection() {
