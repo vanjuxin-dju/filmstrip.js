@@ -53,6 +53,10 @@ export default class SlideShow {
             }
         }
 
+        if (!UTIL.hasSpecificFormat(this._parent)) {
+            console.warn(UTIL.FLEXIBLE_WARNING_MESSAGE);
+        }
+
         this._automatedSwitchBetweenSlides = this._parent.dataset.switchAfter;
         this.#setAutomatedSwitch();
 
