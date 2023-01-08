@@ -90,6 +90,16 @@ export default class SlideShow {
         const startingPoint = this.#currentSlide * (-100);
         let step = 1;
         let i = 1;
+
+        const switchSlide = () => {
+            if (direction === UTIL.SWITCHES.NEXT) {
+                this.#currentSlide++;
+            } else {
+                this.#currentSlide--;
+            }
+
+            this.#setAutomatedSwitch();
+        }
     
         const animateScroll = () => {
             setTimeout(() => {
@@ -110,6 +120,7 @@ export default class SlideShow {
                 if (i <= scrollStep) {
                     animateScroll();
                 } else {
+                    switchSlide();
                     if (this._isLoop && this.isEnding()) {
                         this.#currentSlide = 0;
                         if (this._slidesDirection === UTIL.FILMSTRIP_DIRECTION.VERTICAL) {
@@ -148,6 +159,7 @@ export default class SlideShow {
                     if (i <= scrollStep) {
                         animateSlideOffScreen(true);
                     } else {
+                        switchSlide();
                         if (this._isLoop && this.isEnding()) {
                             this.#currentSlide = 0;
                             if (this._slidesDirection === UTIL.SEPARATE_SLIDES_DIRECTION.UP || this._slidesDirection === UTIL.SEPARATE_SLIDES_DIRECTION.DOWN) {
@@ -207,20 +219,14 @@ export default class SlideShow {
     previousSlide() {
         clearTimeout(this._timer);
         this._actionQueue.addAction(this.#scrollSlide, UTIL.SWITCHES.PREVIOUS, () => {
-            if (this.#currentSlide > 0) {
-                this.#currentSlide--;
-                this.#setAutomatedSwitch();
-            }
+            console.log("slide #" + this.#currentSlide); // temporary placeholder
         });
     }
 
     nextSlide() {
         clearTimeout(this._timer);
         this._actionQueue.addAction(this.#scrollSlide, UTIL.SWITCHES.NEXT, () => {
-            if (this.#currentSlide + 1 < this._slidesCount) {
-                this.#currentSlide++;
-                this.#setAutomatedSwitch();
-            }
+            console.log("slide #" + this.#currentSlide); // temporary placeholder
         });
     }
 
