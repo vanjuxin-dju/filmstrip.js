@@ -2,14 +2,14 @@ export default class ActionQueue {
     #firstItem = null;
     #lastItem = null;
 
-    constructor(context) {
+    constructor(context, func) {
         this._context = context;
+        this._func = func;
     }
 
-    addAction(func, action, callback) {
+    addAction(action, callback) {
         let isNew = false;
         let obj = {
-            func : func,
             action : action,
             callback : callback,
             next : null
@@ -34,8 +34,10 @@ export default class ActionQueue {
             return;
         }
 
-        this.#firstItem.func.call(this._context, this.#firstItem.action, () => {
-            this.#firstItem.callback();
+        this._func.call(this._context, this.#firstItem.action, () => {
+            if (this.#firstItem.callback) {
+                this.#firstItem.callback();
+            }
 
             this.#firstItem = this.#firstItem.next;
             this.#goThrough();

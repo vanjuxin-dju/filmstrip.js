@@ -5,7 +5,7 @@ export default class SlideShow {
     #currentSlide = 0;
 
     constructor(currentSlide) {
-        this._actionQueue = new ActionQueue(this);
+        this._actionQueue = new ActionQueue(this, this.#scrollSlide);
         this._parent = document.getElementsByClassName(UTIL.CLASSES.SLIDES)[0];
         this._isLoop = !!(this._parent.dataset.loop);
         if (this._isLoop) {
@@ -188,6 +188,7 @@ export default class SlideShow {
             }, 20);
         };
 
+        clearTimeout(this._timer);
         if ((this.isBeginning() && direction === UTIL.SWITCHES.PREVIOUS) || (this.isEnding() && direction === UTIL.SWITCHES.NEXT)) {
             callback();
             return;
@@ -216,18 +217,12 @@ export default class SlideShow {
         }
     }
 
-    previousSlide() {
-        clearTimeout(this._timer);
-        this._actionQueue.addAction(this.#scrollSlide, UTIL.SWITCHES.PREVIOUS, () => {
-            console.log("slide #" + this.#currentSlide); // temporary placeholder
-        });
+    previousSlide(callback) {
+        this._actionQueue.addAction(UTIL.SWITCHES.PREVIOUS, callback);
     }
 
-    nextSlide() {
-        clearTimeout(this._timer);
-        this._actionQueue.addAction(this.#scrollSlide, UTIL.SWITCHES.NEXT, () => {
-            console.log("slide #" + this.#currentSlide); // temporary placeholder
-        });
+    nextSlide(callback) {
+        this._actionQueue.addAction(UTIL.SWITCHES.NEXT, callback);
     }
 
     get slidesDirection() {
