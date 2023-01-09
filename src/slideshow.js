@@ -49,7 +49,6 @@ export default class SlideShow {
                         this.#addPerforation(this._slidesDirection === UTIL.FILMSTRIP_DIRECTION.VERTICAL ? 12 : 3);
                         break;
                 }
-                
             }
         }
 
@@ -58,7 +57,6 @@ export default class SlideShow {
         }
 
         this._automatedSwitchBetweenSlides = this._parent.dataset.switchAfter;
-        this.#setAutomatedSwitch();
 
         this._slidesCount = document.getElementsByClassName(UTIL.CLASSES.SLIDE).length;
         if (currentSlide && currentSlide > 1) {
@@ -97,8 +95,6 @@ export default class SlideShow {
             } else {
                 this.#currentSlide--;
             }
-
-            this.#setAutomatedSwitch();
         }
     
         const animateScroll = () => {
@@ -188,7 +184,6 @@ export default class SlideShow {
             }, 20);
         };
 
-        clearTimeout(this._timer);
         if ((this.isBeginning() && direction === UTIL.SWITCHES.PREVIOUS) || (this.isEnding() && direction === UTIL.SWITCHES.NEXT)) {
             callback();
             return;
@@ -202,21 +197,6 @@ export default class SlideShow {
         
     }
 
-    #setAutomatedSwitch() {
-        clearTimeout(this._timer);
-        if (!this.isEnding() || (this._isLoop && this.isEnding())) {
-            const currentSlideElement = this._parent.children[this.#currentSlide];
-            const time = currentSlideElement.dataset.switchAfter || this._automatedSwitchBetweenSlides;
-            const timeNumber = parseInt(time);
-            if (Number.isNaN(timeNumber) || timeNumber <= 0) {
-                return;
-            }
-            this._timer = setTimeout(() => {
-                this.nextSlide();
-            }, timeNumber * 1000);
-        }
-    }
-
     previousSlide(callback) {
         this._actionQueue.addAction(UTIL.SWITCHES.PREVIOUS, callback);
     }
@@ -227,6 +207,20 @@ export default class SlideShow {
 
     get slidesDirection() {
         return this._slidesDirection;
+    }
+
+    get isLoop() {
+        return this._isLoop;
+    }
+
+    get defaultTimeBetweenSlides() {
+        return this._automatedSwitchBetweenSlides ? parseInt(this._automatedSwitchBetweenSlides) : 0;
+    }
+
+    getCurrentSlideSwitchAfter() {
+        const currentSlideElement = this._parent.children[this.#currentSlide];
+        const time = currentSlideElement.dataset.switchAfter;
+        return time ? parseInt(time) : 0;
     }
 
     isBeginning() {
