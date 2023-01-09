@@ -1,6 +1,7 @@
 import "./styles/index.less";
 import SlideShow from "./slideshow";
 import Overlay from "./overlay";
+import AutomatedSwitch from "./automated-switch";
 
 const currentSlide = () => {
     let hash = window.location.hash;
@@ -14,17 +15,62 @@ const currentSlide = () => {
     }
 }
 
-let slideShow = new SlideShow(currentSlide());
-let overlay = new Overlay(slideShow.slidesDirection);
+const slideShow = new SlideShow(currentSlide());
+const overlay = new Overlay(slideShow.slidesDirection);
+const automatedSwitch = new AutomatedSwitch(slideShow.isLoop);
+
+const addAutomationSwitch = () => {
+    let time = slideShow.getCurrentSlideSwitchAfter();
+    if (Number.isNaN(time) || time <= 0) {
+        time = slideShow.defaultTimeBetweenSlides;
+    }
+
+    if (Number.isNaN(time) || time <= 0) {
+        return;
+    }
+
+    automatedSwitch.setAutomatedSwitch(slideShow.isEnding(), time, () => {
+        nextSlide();
+    })
+}
+
 const previousSlide = () => {
-    slideShow.previousSlide();
+    automatedSwitch.clearAutomatedSwitch();
+    slideShow.previousSlide(() => {
+        if (slideShow.isBeginning()) {
+            overlay.disablePreviousButton();
+        }
+        if (!slideShow.isEnding()) {
+            overlay.enableNextButton();
+        }
+        addAutomationSwitch();
+    });
 }
 const nextSlide = () => {
-    slideShow.nextSlide();
+    automatedSwitch.clearAutomatedSwitch();
+    slideShow.nextSlide(() => {
+        if (!slideShow.isBeginning()) {
+            overlay.enablePreviousButton();
+        } else {
+            overlay.disablePreviousButton();
+        }
+        if (slideShow.isEnding()) {
+            overlay.disableNextButton();
+        }
+        addAutomationSwitch();
+    });
 }
 
 overlay.addPreviousSlideClickListener(previousSlide);
 overlay.addNextSlideClickListener(nextSlide);
+
+if (slideShow.isBeginning()) {
+    overlay.disablePreviousButton();
+}
+if (slideShow.isEnding()) {
+    overlay.disableNextButton();
+}
+addAutomationSwitch();
 
 const PREVIOUS_KEY_CODES = new Set(["ArrowLeft", "ArrowUp"]);
 const NEXT_KEY_CODES = new Set(["ArrowRight", "ArrowDown", "Space", "Enter", "NumpadEnter"]);
