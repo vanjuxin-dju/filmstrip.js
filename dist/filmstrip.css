@@ -99,6 +99,10 @@ body {
 .filmstrip .overlay > .next-slide .arrow {
   cursor: pointer;
 }
+.filmstrip .overlay > .previous-slide.disabled,
+.filmstrip .overlay > .next-slide.disabled {
+  visibility: hidden;
+}
 .filmstrip .overlay > .previous-slide {
   top: 0%;
   left: 0%;
