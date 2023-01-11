@@ -52,7 +52,7 @@ export default class SlideShow {
             }
         }
 
-        if (!UTIL.hasSpecificFormat(this._parent)) {
+        if (!UTIL.hasSpecificFormat(this._parent) || this.#isThereFlexibleFormatAmongSlides()) {
             console.warn(UTIL.FLEXIBLE_WARNING_MESSAGE);
         }
 
@@ -77,6 +77,12 @@ export default class SlideShow {
         for (let i = 0; i < slides.length; i++) {
             UTIL.addPerforationToSlide(slides[i], count);
         }
+    }
+
+    #isThereFlexibleFormatAmongSlides() {
+        let slides = this._parent.children;
+        let slidesArray = [...slides];
+        return !!slidesArray.find(slide => slide.classList.contains(UTIL.CLASSES.SLIDE_FORMAT_FLEXIBLE))
     }
 
     #parentHasClass(className) {

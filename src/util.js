@@ -54,13 +54,14 @@ export default {
         NEXT : "next"
     },
 
-    FLEXIBLE_WARNING_MESSAGE :  "It is not recommended to use flexible slide format for the whole presentation!\n" +
-                                "Please add one of the following classes to the root div element:\n" +
+    FLEXIBLE_WARNING_MESSAGE :  "It is not recommended to use flexible slide format!\n" +
+                                "Please use one of the following classes in the root div element or in a slide:\n" +
                                 "- slide-format-4-3-landscape;\n" +
                                 "- slide-format-16-9-landscape;\n" +
                                 "- slide-format-4-3-portrait;\n" +
                                 "- slide-format-16-9-portrait;\n" +
-                                "- slide-format-square.",
+                                "- slide-format-square.\n" +
+                                "See https://github.com/vanjuxin-dju/filmstrip.js/wiki/Slide-formats",
 
     hasSpecificFormat : (element) => {
         let elemClasses = element.classList;
