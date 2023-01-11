@@ -18,4 +18,20 @@ export default class Overlay {
     addPreviousSlideClickListener(callback) {
         this.overlayElement.children.previous.children[0].onclick = callback;
     }
+
+    disablePreviousButton() {
+        this.overlayElement.children.previous.classList.add('disabled');
+    }
+
+    enablePreviousButton() {
+        this.overlayElement.children.previous.classList.remove('disabled');
+    }
+
+    disableNextButton() {
+        this.overlayElement.children.next.classList.add('disabled');
+    }
+
+    enableNextButton() {
+        this.overlayElement.children.next.classList.remove('disabled');
+    }
 }

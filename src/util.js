@@ -15,6 +15,7 @@ classes.SLIDE_FORMAT_16_9_LANDSCAPE = slideFormat + "16-9-landscape";
 classes.SLIDE_FORMAT_4_3_PORTRAIT = slideFormat + "4-3-portrait";
 classes.SLIDE_FORMAT_16_9_PORTRAIT = slideFormat + "16-9-portrait";
 classes.SLIDE_FORMAT_SQUARE = slideFormat + "square";
+classes.SLIDE_FORMAT_FLEXIBLE = slideFormat + "flexible";
 
 classes.SHOW_PERFORATIONS = "show-perforations";
 classes.PERFORATION_WRAPPER = "perforation-wrapper";
@@ -52,6 +53,15 @@ export default {
         PREVIOUS : "previous",
         NEXT : "next"
     },
+
+    FLEXIBLE_WARNING_MESSAGE :  "It is not recommended to use flexible slide format!\n" +
+                                "Please use one of the following classes in the root div element or in a slide:\n" +
+                                "- slide-format-4-3-landscape;\n" +
+                                "- slide-format-16-9-landscape;\n" +
+                                "- slide-format-4-3-portrait;\n" +
+                                "- slide-format-16-9-portrait;\n" +
+                                "- slide-format-square.\n" +
+                                "See https://github.com/vanjuxin-dju/filmstrip.js/wiki/Slide-formats",
 
     hasSpecificFormat : (element) => {
         let elemClasses = element.classList;

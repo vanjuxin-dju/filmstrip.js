@@ -1,9 +1,11 @@
 import UTIL from "./util";
+import ActionQueue from "./action-queue";
 
 export default class SlideShow {
     #currentSlide = 0;
 
     constructor(currentSlide) {
+        this._actionQueue = new ActionQueue(this, this.#scrollSlide);
         this._parent = document.getElementsByClassName(UTIL.CLASSES.SLIDES)[0];
         this._isLoop = !!(this._parent.dataset.loop);
         if (this._isLoop) {
@@ -47,12 +49,14 @@ export default class SlideShow {
                         this.#addPerforation(this._slidesDirection === UTIL.FILMSTRIP_DIRECTION.VERTICAL ? 12 : 3);
                         break;
                 }
-                
             }
         }
 
+        if (!UTIL.hasSpecificFormat(this._parent) || this.#isThereFlexibleFormatAmongSlides()) {
+            console.warn(UTIL.FLEXIBLE_WARNING_MESSAGE);
+        }
+
         this._automatedSwitchBetweenSlides = this._parent.dataset.switchAfter;
-        this.#setAutomatedSwitch();
 
         this._slidesCount = document.getElementsByClassName(UTIL.CLASSES.SLIDE).length;
         if (currentSlide && currentSlide > 1) {
@@ -63,10 +67,11 @@ export default class SlideShow {
 
     #addPerforation(count) {
         let slides = this._parent.children;
-        for (let i = 0; i < slides.length; i++) {
-            if (UTIL.hasSpecificFormat(slides[i])) {
-                return;
-            }
+        let slidesArray = [...slides];
+        let firstSlideIndexWithSpecificFormat = slidesArray.findIndex(slide => UTIL.hasSpecificFormat(slide) || slide.classList.contains(UTIL.CLASSES.SLIDE_FORMAT_FLEXIBLE));
+
+        if (firstSlideIndexWithSpecificFormat >= 0) {
+            return;
         }
 
         for (let i = 0; i < slides.length; i++) {
@@ -74,15 +79,29 @@ export default class SlideShow {
         }
     }
 
+    #isThereFlexibleFormatAmongSlides() {
+        let slides = this._parent.children;
+        let slidesArray = [...slides];
+        return !!slidesArray.find(slide => slide.classList.contains(UTIL.CLASSES.SLIDE_FORMAT_FLEXIBLE))
+    }
+
     #parentHasClass(className) {
         return this._parent.classList.contains(className);
     }
 
-    #scrollSlide(direction) {
+    #scrollSlide(direction, callback) {
         const scrollStep = 100;
         const startingPoint = this.#currentSlide * (-100);
         let step = 1;
         let i = 1;
+
+        const switchSlide = () => {
+            if (direction === UTIL.SWITCHES.NEXT) {
+                this.#currentSlide++;
+            } else {
+                this.#currentSlide--;
+            }
+        }
     
         const animateScroll = () => {
             setTimeout(() => {
@@ -103,6 +122,7 @@ export default class SlideShow {
                 if (i <= scrollStep) {
                     animateScroll();
                 } else {
+                    switchSlide();
                     if (this._isLoop && this.isEnding()) {
                         this.#currentSlide = 0;
                         if (this._slidesDirection === UTIL.FILMSTRIP_DIRECTION.VERTICAL) {
@@ -111,6 +131,7 @@ export default class SlideShow {
                             this._parent.style.left = "0vw";
                         }
                     }
+                    callback();
                 }
             }, 20);
         };
@@ -140,6 +161,7 @@ export default class SlideShow {
                     if (i <= scrollStep) {
                         animateSlideOffScreen(true);
                     } else {
+                        switchSlide();
                         if (this._isLoop && this.isEnding()) {
                             this.#currentSlide = 0;
                             if (this._slidesDirection === UTIL.SEPARATE_SLIDES_DIRECTION.UP || this._slidesDirection === UTIL.SEPARATE_SLIDES_DIRECTION.DOWN) {
@@ -148,6 +170,7 @@ export default class SlideShow {
                                 this._parent.style.top = "0vh";
                             }
                         }
+                        callback();
                     }
                 } else {
                     if (i <= scrollStep) {
@@ -167,6 +190,11 @@ export default class SlideShow {
             }, 20);
         };
 
+        if ((this.isBeginning() && direction === UTIL.SWITCHES.PREVIOUS) || (this.isEnding() && direction === UTIL.SWITCHES.NEXT)) {
+            callback();
+            return;
+        }
+
         if (this._slideshowStyle === UTIL.SLIDESHOW_TYPE.SEPARATE) {
             animateSlideOffScreen();
         } else {
@@ -175,39 +203,30 @@ export default class SlideShow {
         
     }
 
-    #setAutomatedSwitch() {
-        clearTimeout(this._timer);
-        if (!this.isEnding() || (this._isLoop && this.isEnding())) {
-            const currentSlideElement = this._parent.children[this.#currentSlide];
-            const time = currentSlideElement.dataset.switchAfter || this._automatedSwitchBetweenSlides;
-            const timeNumber = parseInt(time);
-            if (Number.isNaN(timeNumber) || timeNumber <= 0) {
-                return;
-            }
-            this._timer = setTimeout(() => {
-                this.nextSlide();
-            }, timeNumber * 1000);
-        }
+    previousSlide(callback) {
+        this._actionQueue.addAction(UTIL.SWITCHES.PREVIOUS, callback);
     }
 
-    previousSlide() {
-        if (this.#currentSlide > 0) {
-            this.#scrollSlide(UTIL.SWITCHES.PREVIOUS);
-            this.#currentSlide--;
-            this.#setAutomatedSwitch();
-        }
-    }
-
-    nextSlide() {
-        if (this.#currentSlide + 1 < this._slidesCount) {
-            this.#scrollSlide(UTIL.SWITCHES.NEXT);
-            this.#currentSlide++;
-            this.#setAutomatedSwitch();
-        }
+    nextSlide(callback) {
+        this._actionQueue.addAction(UTIL.SWITCHES.NEXT, callback);
     }
 
     get slidesDirection() {
         return this._slidesDirection;
+    }
+
+    get isLoop() {
+        return this._isLoop;
+    }
+
+    get defaultTimeBetweenSlides() {
+        return this._automatedSwitchBetweenSlides ? parseInt(this._automatedSwitchBetweenSlides) : 0;
+    }
+
+    getCurrentSlideSwitchAfter() {
+        const currentSlideElement = this._parent.children[this.#currentSlide];
+        const time = currentSlideElement.dataset.switchAfter;
+        return time ? parseInt(time) : 0;
     }
 
     isBeginning() {
