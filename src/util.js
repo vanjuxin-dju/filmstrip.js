@@ -20,6 +20,9 @@ classes.SLIDE_FORMAT_FLEXIBLE = slideFormat + "flexible";
 classes.SHOW_PERFORATIONS = "show-perforations";
 classes.PERFORATION_WRAPPER = "perforation-wrapper";
 
+classes.SHOW_OLD_FILM_STYLE = "show-old-film-style";
+classes.OLD_FILM = "old-film";
+
 export default {
     SLIDESHOW_TYPE : {
         SEPARATE : "separate",
@@ -80,5 +83,11 @@ export default {
             perforationWrapper = perforationWrapper.cloneNode(false);
             slide.append(perforationWrapper);
         }
+    },
+
+    addOldFilmStyleToSlide : (slide) => {
+        let perforationWrapper = document.createElement("div");
+        perforationWrapper.classList.add(classes.OLD_FILM);
+        slide.append(perforationWrapper);
     },
 };
