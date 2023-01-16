@@ -13,6 +13,10 @@ export default class SlideShow {
             this._parent.append(firstSlideCopy);
         }
 
+        if (UTIL.hasSpecificFormat(this._parent) && this.#parentHasClass(UTIL.CLASSES.SHOW_OLD_FILM_STYLE)) {
+            this.#addOldStyle();
+        }
+
         this._slideshowStyle = this.#parentHasClass(UTIL.CLASSES.SLIDES_SEPARATE) ? UTIL.SLIDESHOW_TYPE.SEPARATE : UTIL.SLIDESHOW_TYPE.FILMSTRIP;
         if (this._slideshowStyle === UTIL.SLIDESHOW_TYPE.SEPARATE) {
             this._slidesDirection = this.#parentHasClass(UTIL.CLASSES.SLIDES_SEPARATE_UP) ? UTIL.SEPARATE_SLIDES_DIRECTION.UP :
@@ -76,6 +80,13 @@ export default class SlideShow {
 
         for (let i = 0; i < slides.length; i++) {
             UTIL.addPerforationToSlide(slides[i], count);
+        }
+    }
+
+    #addOldStyle() {
+        let slides = this._parent.children;
+        for (let i = 0; i < slides.length; i++) {
+            UTIL.addOldFilmStyleToSlide(slides[i]);
         }
     }
 
