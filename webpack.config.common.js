@@ -3,15 +3,15 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: {
-    "filmstrip": "./src/index.js"
+    "filmstrip": "./src/index.ts"
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.ts$/,
         exclude: /(node_modules|bower_components)/,
         loader: "babel-loader",
-        options: { presets: ["@babel/env"] }
+        options: { presets: ["@babel/typescript", "@babel/env"] }
       },
       {
         test: /\.(le|c)ss$/,
