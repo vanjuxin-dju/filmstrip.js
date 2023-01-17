@@ -1,9 +1,12 @@
 import "./styles/index.less";
-import SlideShow from "./slideshow";
-import Overlay from "./overlay";
-import AutomatedSwitch from "./automated-switch";
 
-const currentSlide = () => {
+import AutomatedSwitch from "./scripts/AutomatedSwitch";
+import DiapositiveDirection from "./scripts/util/DiapositiveDirection";
+import FilmstripDirection from "./scripts/util/FilmstripDirection";
+import Overlay from "./scripts/Overlay";
+import SlideShow from "./scripts/SlideShow";
+
+const currentSlide = () : number => {
     let hash = window.location.hash;
     hash = hash ? hash.substring(1) : hash;
     const currentSlide = parseInt(hash);
@@ -16,13 +19,13 @@ const currentSlide = () => {
 }
 
 const slideShow = new SlideShow(currentSlide());
-const overlay = new Overlay(slideShow.slidesDirection);
-const automatedSwitch = new AutomatedSwitch(slideShow.isLoop);
+const overlay = new Overlay(slideShow.getSlidesDirection());
+const automatedSwitch = new AutomatedSwitch(slideShow.getIsLoop());
 
 const addAutomationSwitch = () => {
     let time = slideShow.getCurrentSlideSwitchAfter();
     if (Number.isNaN(time) || time <= 0) {
-        time = slideShow.defaultTimeBetweenSlides;
+        time = slideShow.getDefaultTimeBetweenSlides();
     }
 
     if (Number.isNaN(time) || time <= 0) {
@@ -95,12 +98,15 @@ document.addEventListener("keyup", (event) => {
     }
 
     document.addEventListener('touchstart', e => {
-        touchStart = (direction === "vertical" || direction === "up" || direction === "down") ? e.changedTouches[0].screenY : e.changedTouches[0].screenX;
+        touchStart = (direction === FilmstripDirection.VERTICAL || 
+            direction === DiapositiveDirection.UP || 
+            direction === DiapositiveDirection.DOWN) ? e.changedTouches[0].screenY : e.changedTouches[0].screenX;
     })
 
     document.addEventListener('touchend', e => {
-        touchEnd = (direction === "vertical" || direction === "up" || direction === "down") ? e.changedTouches[0].screenY : e.changedTouches[0].screenX;
+        touchEnd = (direction === FilmstripDirection.VERTICAL || 
+            direction === DiapositiveDirection.UP || 
+            direction === DiapositiveDirection.DOWN) ? e.changedTouches[0].screenY : e.changedTouches[0].screenX;
         checkDirection();
     })
-})(slideShow.slidesDirection);
-
+})(slideShow.getSlidesDirection());
