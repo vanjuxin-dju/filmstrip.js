@@ -30,7 +30,7 @@ module.exports = {
       }
     ]
   },
-  resolve: { extensions: ["*", ".js", ".css", ".less"] },
+  resolve: { extensions: ["*", ".ts", ".js", ".css", ".less"] },
   output: {
     path: path.resolve(__dirname, "dist"),
     publicPath: "/dist/",
