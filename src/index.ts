@@ -22,7 +22,7 @@ const slideShow = new SlideShow(currentSlide());
 const overlay = new Overlay(slideShow.getSlidesDirection());
 const automatedSwitch = new AutomatedSwitch(slideShow.getIsLoop());
 
-const addAutomationSwitch = () => {
+const addAutomationSwitch = (): void => {
     let time = slideShow.getCurrentSlideSwitchAfter();
     if (Number.isNaN(time) || time <= 0) {
         time = slideShow.getDefaultTimeBetweenSlides();
@@ -37,9 +37,9 @@ const addAutomationSwitch = () => {
     })
 }
 
-const previousSlide = () => {
+const previousSlide = (): void => {
     automatedSwitch.clearAutomatedSwitch();
-    slideShow.previousSlide(() => {
+    slideShow.previousSlide((): void => {
         if (slideShow.isBeginning()) {
             overlay.disablePreviousButton();
         }
@@ -49,9 +49,9 @@ const previousSlide = () => {
         addAutomationSwitch();
     });
 }
-const nextSlide = () => {
+const nextSlide = (): void => {
     automatedSwitch.clearAutomatedSwitch();
-    slideShow.nextSlide(() => {
+    slideShow.nextSlide((): void => {
         if (!slideShow.isBeginning()) {
             overlay.enablePreviousButton();
         } else {
@@ -77,7 +77,7 @@ addAutomationSwitch();
 
 const PREVIOUS_KEY_CODES = new Set(["ArrowLeft", "ArrowUp"]);
 const NEXT_KEY_CODES = new Set(["ArrowRight", "ArrowDown", "Space", "Enter", "NumpadEnter"]);
-document.addEventListener("keyup", (event) => {
+document.addEventListener("keyup", (event: KeyboardEvent) => {
     if (PREVIOUS_KEY_CODES.has(event.code)) {
         previousSlide();
     } else if (NEXT_KEY_CODES.has(event.code)) {
@@ -85,11 +85,11 @@ document.addEventListener("keyup", (event) => {
     }
 });
 
-(function addMobileEventListeners(direction) {
-    let touchStart = 0;
-    let touchEnd = 0;
+(function addMobileEventListeners(direction: FilmstripDirection | DiapositiveDirection) {
+    let touchStart: number = 0;
+    let touchEnd: number = 0;
     
-    const checkDirection = () => {
+    const checkDirection = (): void => {
         if (touchEnd < touchStart) {
             nextSlide();
         } else if (touchEnd > touchStart) {
@@ -97,13 +97,13 @@ document.addEventListener("keyup", (event) => {
         }
     }
 
-    document.addEventListener('touchstart', e => {
+    document.addEventListener('touchstart', (e: TouchEvent) => {
         touchStart = (direction === FilmstripDirection.VERTICAL || 
             direction === DiapositiveDirection.UP || 
             direction === DiapositiveDirection.DOWN) ? e.changedTouches[0].screenY : e.changedTouches[0].screenX;
     })
 
-    document.addEventListener('touchend', e => {
+    document.addEventListener('touchend', (e: TouchEvent) => {
         touchEnd = (direction === FilmstripDirection.VERTICAL || 
             direction === DiapositiveDirection.UP || 
             direction === DiapositiveDirection.DOWN) ? e.changedTouches[0].screenY : e.changedTouches[0].screenX;

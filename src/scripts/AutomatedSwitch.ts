@@ -1,5 +1,5 @@
 export default class AutomatedSwitch {
-    private timer : any;
+    private timer : ReturnType<typeof setTimeout> | null;
     private isLoop : boolean;
 
     constructor(isLoop : boolean) {
@@ -8,7 +8,7 @@ export default class AutomatedSwitch {
     }
 
     setAutomatedSwitch(isEnding : boolean, time : number, callback : Function) {
-        clearTimeout(this.timer);
+        this.clearAutomatedSwitch();
         if (!isEnding || (this.isLoop && isEnding)) {
             this.timer = setTimeout(() => {
                 callback();
@@ -17,6 +17,8 @@ export default class AutomatedSwitch {
     }
 
     clearAutomatedSwitch() {
-        clearTimeout(this.timer);
+        if (this.timer !== null) {
+            clearTimeout(this.timer);
+        }
     }
 }
