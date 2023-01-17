@@ -1,6 +1,6 @@
 {
   "name": "filmstrip.js",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Filmstrip.js is a front-end library, which allows you to create beautiful presentations in a style of diafilm filmstrips or diapositive slideshows",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
