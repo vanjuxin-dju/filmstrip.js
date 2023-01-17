@@ -94,3 +94,9 @@ It will automate flipping slides in your presentation.
 You can simply add a `data-loop="loop"` attribute to the root div element (`<div class="slides">`).
 
 It will turn your presentation into a continuous slideshow.
+
+### Old film style
+
+You can simply add a `show-old-film-style` class to the root div element (`<div class="slides">`).
+
+It will decorate your presentation with scratches like an old age-worn film provided that your presentation has a specific slide format (not flexible one).
