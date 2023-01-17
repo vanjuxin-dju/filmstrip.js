@@ -1,16 +1,13 @@
 import ActionQueue from "./ActionQueue";
 import DiapositiveDirection from "./util/DiapositiveDirection";
 import FilmstripDirection from "./util/FilmstripDirection";
-import { Switch } from "./util/Utils";
+import { Switch, PREVIOUS, NEXT } from "./util/Switch";
 
 const SLIDES = "slides",
       SLIDE = "slide",
 
       SHOW_OLD_FILM_STYLE = "show-old-film-style",
       OLD_FILM = "old-film",
-
-      PREVIOUS : Switch = "previous",
-      NEXT : Switch = "next",
 
       SHOW_PERFORATIONS = "show-perforations",
       PERFORATION_WRAPPER = "perforation-wrapper",
@@ -54,7 +51,7 @@ enum SlideFormat {
 class SlideShow {
     private currentSlide : number;
     private actionQueue : ActionQueue;
-    private parent : any;
+    private parent : HTMLElement;
     private isLoop : boolean;
     private slideshowStyle : SlideshowStyle;
     private slidesDirection : FilmstripDirection | DiapositiveDirection;
@@ -64,11 +61,11 @@ class SlideShow {
     constructor(currentSlide? : number) {
         this.currentSlide = 0;
         this.actionQueue = new ActionQueue(this, this.scrollSlide);
-        this.parent = document.getElementsByClassName(SLIDES)[0];
+        this.parent = document.getElementsByClassName(SLIDES)[0] as HTMLElement;
         this.isLoop = !!(this.parent.dataset.loop);
 
         if (this.isLoop) {
-            let firstSlideCopy = this.parent.children[0].cloneNode(true);
+            let firstSlideCopy : Node = this.parent.children[0].cloneNode(true);
             this.parent.append(firstSlideCopy);
         }
 
@@ -86,11 +83,11 @@ class SlideShow {
         } else {
             this.slidesDirection = this.parentHasClass(SLIDES_FILMSTRIP_HORIZONTAL) ? FilmstripDirection.HORIZONTAL : FilmstripDirection.VERTICAL;
 
-            let slidesMainFormat =  this.parentHasClass(SLIDE_FORMAT_4_3_LANDSCAPE) ? SlideFormat.LANDSCAPE_4_3 :
-                                    this.parentHasClass(SLIDE_FORMAT_16_9_LANDSCAPE) ? SlideFormat.LANDSCAPE_16_9 :
-                                    this.parentHasClass(SLIDE_FORMAT_4_3_PORTRAIT) ? SlideFormat.PORTRAIT_4_3 :
-                                    this.parentHasClass(SLIDE_FORMAT_16_9_PORTRAIT) ? SlideFormat.PORTRAIT_16_9 :
-                                    this.parentHasClass(SLIDE_FORMAT_SQUARE) ? SlideFormat.SQUARE : SlideFormat.FLEXIBLE;
+            let slidesMainFormat: SlideFormat = this.parentHasClass(SLIDE_FORMAT_4_3_LANDSCAPE) ? SlideFormat.LANDSCAPE_4_3 :
+                                                this.parentHasClass(SLIDE_FORMAT_16_9_LANDSCAPE) ? SlideFormat.LANDSCAPE_16_9 :
+                                                this.parentHasClass(SLIDE_FORMAT_4_3_PORTRAIT) ? SlideFormat.PORTRAIT_4_3 :
+                                                this.parentHasClass(SLIDE_FORMAT_16_9_PORTRAIT) ? SlideFormat.PORTRAIT_16_9 :
+                                                this.parentHasClass(SLIDE_FORMAT_SQUARE) ? SlideFormat.SQUARE : SlideFormat.FLEXIBLE;
             if (this.hasSpecificFormat(this.parent) && this.parentHasClass(SHOW_PERFORATIONS)) {
                 switch (slidesMainFormat) {
                     case SlideFormat.LANDSCAPE_4_3:
@@ -120,7 +117,7 @@ class SlideShow {
             console.warn(FLEXIBLE_WARNING_MESSAGE);
         }
 
-        this.automatedSwitchBetweenSlides = this.parent.dataset.switchAfter;
+        this.automatedSwitchBetweenSlides = this.parent.dataset.switchAfter !== undefined ? this.parent.dataset.switchAfter : null;
 
         this.slidesCount = document.getElementsByClassName(SLIDE).length;
         if (currentSlide && currentSlide > 1) {
@@ -133,20 +130,20 @@ class SlideShow {
         return this.parent.classList.contains(className);
     }
 
-    private addOldStyle() {
+    private addOldStyle(): void {
         let slides = this.parent.children;
         for (let i = 0; i < slides.length; i++) {
             this.addOldFilmStyleToSlide(slides[i]);
         }
     }
 
-    private addOldFilmStyleToSlide(slide: any) {
+    private addOldFilmStyleToSlide(slide: Element): void {
         let perforationWrapper = document.createElement("div");
         perforationWrapper.classList.add(OLD_FILM);
         slide.append(perforationWrapper);
     }
 
-    private hasSpecificFormat(element: any) {
+    private hasSpecificFormat(element: Element) : boolean {
         let elemClasses = element.classList;
         return  elemClasses.contains(SLIDE_FORMAT_4_3_LANDSCAPE) || 
                 elemClasses.contains(SLIDE_FORMAT_16_9_LANDSCAPE) ||
@@ -155,9 +152,9 @@ class SlideShow {
                 elemClasses.contains(SLIDE_FORMAT_SQUARE);
     }
 
-    private addPerforation(count: number) {
+    private addPerforation(count: number): void {
         let slides = this.parent.children;
-        let slidesArray = [...slides];
+        let slidesArray = Array.from(slides);
         let firstSlideIndexWithSpecificFormat = slidesArray.findIndex(slide => this.hasSpecificFormat(slide) || slide.classList.contains(SLIDE_FORMAT_FLEXIBLE));
 
         if (firstSlideIndexWithSpecificFormat >= 0) {
@@ -169,29 +166,29 @@ class SlideShow {
         }
     }
 
-    private addPerforationToSlide(slide : any, count : number) {
-        let perforationWrapper : any = document.createElement("div");
+    private addPerforationToSlide(slide: Element, count : number): void {
+        let perforationWrapper: HTMLElement = document.createElement("div");
         perforationWrapper.classList.add(PERFORATION_WRAPPER);
         slide.append(perforationWrapper);
         for (let i = 1; i < count; i++) {
-            perforationWrapper = perforationWrapper.cloneNode(false);
+            perforationWrapper = perforationWrapper.cloneNode(false) as HTMLElement;
             slide.append(perforationWrapper);
         }
     }
 
     private isThereFlexibleFormatAmongSlides() : boolean {
         let slides = this.parent.children;
-        let slidesArray = [...slides];
+        let slidesArray = Array.from(slides);
         return !!slidesArray.find(slide => slide.classList.contains(SLIDE_FORMAT_FLEXIBLE))
     }
 
-    private scrollSlide(direction : Switch, callback : Function) {
+    private scrollSlide(direction: Switch, callback: Function): void {
         const scrollStep = 100;
         const startingPoint = this.currentSlide * (-100);
         let step = 1;
         let i = 1;
 
-        const switchSlide = () => {
+        const switchSlide = (): void => {
             if (direction === NEXT) {
                 this.currentSlide++;
             } else {
@@ -199,7 +196,7 @@ class SlideShow {
             }
         }
     
-        const animateScroll = () => {
+        const animateScroll = (): void => {
             setTimeout(() => {
                 if (this.slidesDirection === FilmstripDirection.VERTICAL) {
                     this.parent.style.top = (direction === NEXT ? startingPoint - i : startingPoint + i) + "vh";
@@ -232,7 +229,7 @@ class SlideShow {
             }, 20);
         };
 
-        const animateSlideOffScreen = (reverse? : boolean) => {
+        const animateSlideOffScreen = (reverse?: boolean): void => {
             setTimeout(() => {
                 if (this.slidesDirection === DiapositiveDirection.UP) {
                     this.parent.style.top = -(reverse ? 100 - i : i) + "vh";
@@ -299,37 +296,37 @@ class SlideShow {
         
     }
 
-    previousSlide(callback? : Function) {
+    previousSlide(callback? : Function): void {
         this.actionQueue.addAction(PREVIOUS, callback);
     }
 
-    nextSlide(callback? : Function) {
+    nextSlide(callback? : Function): void {
         this.actionQueue.addAction(NEXT, callback);
     }
 
-    getSlidesDirection() {
+    getSlidesDirection(): FilmstripDirection | DiapositiveDirection {
         return this.slidesDirection;
     }
 
-    getIsLoop() {
+    getIsLoop(): boolean {
         return this.isLoop;
     }
 
-    getDefaultTimeBetweenSlides() {
+    getDefaultTimeBetweenSlides(): number {
         return this.automatedSwitchBetweenSlides ? parseInt(this.automatedSwitchBetweenSlides) : 0;
     }
 
-    getCurrentSlideSwitchAfter() {
-        const currentSlideElement = this.parent.children[this.currentSlide];
+    getCurrentSlideSwitchAfter(): number {
+        const currentSlideElement : HTMLElement = this.parent.children[this.currentSlide] as HTMLElement;
         const time = currentSlideElement.dataset.switchAfter;
         return time ? parseInt(time) : 0;
     }
 
-    isBeginning() {
+    isBeginning(): boolean {
         return this.currentSlide === 0;
     }
 
-    isEnding() {
+    isEnding(): boolean {
         return this.currentSlide + 1 === this.slidesCount;
     }
 }

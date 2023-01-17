@@ -1,4 +1,4 @@
-import { Switch } from "./util/Utils";
+import { Switch } from "./util/Switch";
 
 type QueueNode = {
     action : Switch,

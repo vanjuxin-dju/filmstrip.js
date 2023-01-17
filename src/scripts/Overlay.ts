@@ -1,43 +1,52 @@
 import DiapositiveDirection from "./util/DiapositiveDirection";
 import FilmstripDirection from "./util/FilmstripDirection";
+import { PREVIOUS, NEXT } from "./util/Switch";
 
 class Overlay {
-    private overlayElement : any;
+    private previous: HTMLElement;
+    private next: HTMLElement;
 
     constructor(slidesDirection : FilmstripDirection | DiapositiveDirection) {
-        this.overlayElement = document.createElement('div');
-        this.overlayElement.classList.add("overlay", "overlay-" + slidesDirection);
-        this.overlayElement.innerHTML = `<div class="previous-slide" name="previous">
-                                            <div class="arrow" title="Previous slide"></div>
-                                        </div>
-                                        <div class="next-slide" name="next">
-                                            <div class="arrow" title="Next slide"></div>
-                                        </div>`;
-        document.body.append(this.overlayElement);
+        const overlayElement = document.createElement('div');
+        overlayElement.classList.add("overlay", "overlay-" + slidesDirection);
+        overlayElement.innerHTML = `<div class="previous-slide" name="previous">
+                                        <div class="arrow" title="Previous slide"></div>
+                                    </div>
+                                    <div class="next-slide" name="next">
+                                        <div class="arrow" title="Next slide"></div>
+                                    </div>`;
+        document.body.append(overlayElement);
+
+        this.previous = overlayElement.children.namedItem(PREVIOUS)! as HTMLElement;
+        this.next = overlayElement.children.namedItem(NEXT)! as HTMLElement;
     }
 
     addNextSlideClickListener(callback : Function) {
-        this.overlayElement.children.next.children[0].onclick = callback;
+        (this.next.children[0] as HTMLElement).onclick = (e) => {
+            callback();
+        };
     }
 
     addPreviousSlideClickListener(callback : Function) {
-        this.overlayElement.children.previous.children[0].onclick = callback;
+        (this.previous.children[0] as HTMLElement).onclick = (e) => {
+            callback();
+        };
     }
 
     disablePreviousButton() {
-        this.overlayElement.children.previous.classList.add('disabled');
+        this.previous.classList.add('disabled');
     }
 
     enablePreviousButton() {
-        this.overlayElement.children.previous.classList.remove('disabled');
+        this.previous.classList.remove('disabled');
     }
 
     disableNextButton() {
-        this.overlayElement.children.next.classList.add('disabled');
+        this.next.classList.add('disabled');
     }
 
     enableNextButton() {
-        this.overlayElement.children.next.classList.remove('disabled');
+        this.next.classList.remove('disabled');
     }
 }
 
