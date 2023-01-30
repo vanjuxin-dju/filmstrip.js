@@ -12,7 +12,7 @@
             width: 100%;
             height: 100%;
             background-image: var(--scratches1);
-            background-size: 100% 100%;
+            background-size: 106% 100%;
             background-repeat: no-repeat;
             background-position: center center;
             opacity: 0.6;
@@ -66,19 +66,19 @@
 
     &.slide-format-16-9-landscape {
         > section.slide > .old-film {
-            background-size: 100% 150%;
+            background-size: 119% 150%;
         }
     }
 
     &.slide-format-square {
         > section.slide > .old-film {
-            background-size: 150% 100%;
+            background-size: 141% 100%;
         }
     }
 
     &.slide-format-4-3-portrait {
         > section.slide > .old-film {
-            background-size: 200% 100%;
+            background-size: 189% 100%;
         }
     }
 
@@ -89,21 +89,27 @@
     }
 
     > section.slide {
+        &.slide-format-4-3-landscape {
+            > .old-film {
+                background-size: 106% 100%;
+            }
+        }
+
         &.slide-format-16-9-landscape {
             > .old-film {
-                background-size: 100% 150%;
+                background-size: 119% 150%;
             }
         }
     
         &.slide-format-square {
             > .old-film {
-                background-size: 150% 100%;
+                background-size: 141% 100%;
             }
         }
     
         &.slide-format-4-3-portrait {
             > .old-film {
-                background-size: 200% 100%;
+                background-size: 189% 100%;
             }
         }
     
