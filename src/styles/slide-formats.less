@@ -1,15 +1,17 @@
 .filmstrip > .slides {
     .format-4x3-landscape-mixin() {
         @media screen and (min-width: 133.3333vh) {
-            padding: 2vh calc((100vw - 128vh) / 2);
+            padding: 0vh calc((100vw - 128vh) / 2);
             > .slide-content {
+                margin: 2vh 0;
                 height: 96vh;
                 width: 128vh;
             }
         }
         @media screen and (max-width: 133.3332vh) {
-            padding: calc((100vh - 72vw) / 2) 2vw;
+            padding: calc((100vh - 72vw) / 2) 0vw;
             > .slide-content {
+                margin: 0 2vw;
                 width: 96vw;
                 height: 72vw;
                 h1 {
@@ -45,15 +47,17 @@
 
     .format-16x9-landscape-mixin() {
         @media screen and (min-width: 177.7778vh) {
-            padding: 2vh calc((100vw - 170.6667vh) / 2);
+            padding: 0vh calc((100vw - 170.6667vh) / 2);
             > .slide-content {
+                margin: 2vh 0;
                 height: 96vh;
                 width: 170.6667vh;
             }
         }
         @media screen and (max-width: 177.7777vh) {
-            padding: calc((100vh - 54vw) / 2) 2vw;
+            padding: calc((100vh - 54vw) / 2) 0vw;
             > .slide-content {
+                margin: 0 2vw;
                 width: 96vw;
                 height: 54vw;
                 h1 {
@@ -89,17 +93,19 @@
 
     .format-square-mixin() {
         @media screen and (min-width: 100vh) {
-            padding: 2vh calc((100vw - 96vh) / 2);
+            padding: 0vh calc((100vw - 96vh) / 2);
 
             > .slide-content {
+                margin: 2vh 0;
                 height: 96vh;
                 width: 96vh;
             }
         }
         @media screen and (max-width: 99.9999vh) {
-            padding: calc((100vh - 96vw) / 2) 2vw;
+            padding: calc((100vh - 96vw) / 2) 0vw;
 
             > .slide-content {
+                margin: 0 2vw;
                 width: 96vw;
                 height: 96vw;
             }
@@ -108,8 +114,9 @@
 
     .format-4x3-portrait-mixin() {
         @media screen and (min-width: 74vh) {
-            padding: 2vh calc((100vw - 72vh) / 2);
+            padding: 0vh calc((100vw - 72vh) / 2);
             > .slide-content {
+                margin: 2vh 0;
                 width: 72vh;
                 height: 96vh;
 
@@ -144,8 +151,9 @@
         }
 
         @media screen and (max-width: 73.9999vh) {
-            padding: calc((100vh - 128vw) / 2) 2vw;
+            padding: calc((100vh - 128vw) / 2) 0vw;
             > .slide-content {
+                margin: 0 2vw;
                 width: 96vw;
                 height: 128vw;
             }
@@ -158,8 +166,9 @@
 
     .format-16x9-portrait-mixin() {
         @media screen and (min-width: 56vh) {
-            padding: 2vh calc((100vw - 54vh) / 2);
+            padding: 0vh calc((100vw - 54vh) / 2);
             > .slide-content {
+                margin: 2vh 0;
                 width: 54vh;
                 height: 96vh;
 
@@ -194,8 +203,9 @@
         }
 
         @media screen and (max-width: 55.9999vh) {
-            padding: calc((100vh - 170.6667vw) / 2) 2vw;
+            padding: calc((100vh - 170.6667vw) / 2) 0vw;
             > .slide-content {
+                margin: 0 2vw;
                 width: 96vw;
                 height: 170.6667vw;
             }
