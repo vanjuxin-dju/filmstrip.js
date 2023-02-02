@@ -3,7 +3,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: {
-    "filmstrip": "./src/index.ts"
+    "filmstrip": "./src/index.ts",
+    "filmstrip-lite" : "./src/index-lite.ts"
   },
   module: {
     rules: [
