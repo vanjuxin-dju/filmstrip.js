@@ -1,12 +1,9 @@
-import "./styles/index.less";
+import "./styles/index-lite.less";
 
-import AutomatedSwitch from "./scripts/AutomatedSwitch";
 import DiapositiveDirection from "./scripts/util/DiapositiveDirection";
 import FilmstripDirection from "./scripts/util/FilmstripDirection";
 import Overlay from "./scripts/Overlay";
 import SlideShow from "./scripts/SlideShow";
-import FilmPerforator from "./scripts/FilmPerforator";
-import FilmOldificator from "./scripts/FilmOldificator";
 
 const currentSlide = () : number => {
     let hash = window.location.hash;
@@ -20,27 +17,10 @@ const currentSlide = () : number => {
     }
 }
 
-const slideShow = new SlideShow(currentSlide(), new FilmPerforator(), new FilmOldificator());
+const slideShow = new SlideShow(currentSlide());
 const overlay = new Overlay(slideShow.getSlidesDirection());
-const automatedSwitch = new AutomatedSwitch(slideShow.getIsLoop());
-
-const addAutomationSwitch = (): void => {
-    let time = slideShow.getCurrentSlideSwitchAfter();
-    if (Number.isNaN(time) || time <= 0) {
-        time = slideShow.getDefaultTimeBetweenSlides();
-    }
-
-    if (Number.isNaN(time) || time <= 0) {
-        return;
-    }
-
-    automatedSwitch.setAutomatedSwitch(slideShow.isEnding(), time, () => {
-        nextSlide();
-    })
-}
 
 const previousSlide = (): void => {
-    automatedSwitch.clearAutomatedSwitch();
     slideShow.previousSlide((): void => {
         if (slideShow.isBeginning()) {
             overlay.disablePreviousButton();
@@ -48,11 +28,9 @@ const previousSlide = (): void => {
         if (!slideShow.isEnding()) {
             overlay.enableNextButton();
         }
-        addAutomationSwitch();
     });
 }
 const nextSlide = (): void => {
-    automatedSwitch.clearAutomatedSwitch();
     slideShow.nextSlide((): void => {
         if (!slideShow.isBeginning()) {
             overlay.enablePreviousButton();
@@ -62,7 +40,6 @@ const nextSlide = (): void => {
         if (slideShow.isEnding()) {
             overlay.disableNextButton();
         }
-        addAutomationSwitch();
     });
 }
 
@@ -75,7 +52,6 @@ if (slideShow.isBeginning()) {
 if (slideShow.isEnding()) {
     overlay.disableNextButton();
 }
-addAutomationSwitch();
 
 const PREVIOUS_KEY_CODES = new Set(["ArrowLeft", "ArrowUp"]);
 const NEXT_KEY_CODES = new Set(["ArrowRight", "ArrowDown", "Space", "Enter", "NumpadEnter"]);

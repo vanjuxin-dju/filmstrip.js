@@ -1,16 +1,18 @@
 import ActionQueue from "./ActionQueue";
+import Oldifier from "./interfaces/Oldifier";
+import Perforator from "./interfaces/Perforator";
 import DiapositiveDirection from "./util/DiapositiveDirection";
 import FilmstripDirection from "./util/FilmstripDirection";
+import SlideFormat from "./util/SlideFormat";
 import { Switch, PREVIOUS, NEXT } from "./util/Switch";
+import UTIL from "./util/Util";
 
 const SLIDES = "slides",
       SLIDE = "slide",
 
       SHOW_OLD_FILM_STYLE = "show-old-film-style",
-      OLD_FILM = "old-film",
 
       SHOW_PERFORATIONS = "show-perforations",
-      PERFORATION_WRAPPER = "perforation-wrapper",
 
       slideFormat = SLIDE + "-format-",
       SLIDE_FORMAT_4_3_LANDSCAPE = slideFormat + "4-3-landscape",
@@ -39,15 +41,6 @@ enum SlideshowStyle {
     FILMSTRIP
 };
 
-enum SlideFormat {
-    FLEXIBLE,
-    SQUARE,
-    LANDSCAPE_4_3,
-    LANDSCAPE_16_9,
-    PORTRAIT_4_3,
-    PORTRAIT_16_9
-};
-
 class SlideShow {
     private currentSlide : number;
     private actionQueue : ActionQueue;
@@ -58,7 +51,7 @@ class SlideShow {
     private slidesCount : number;
     private automatedSwitchBetweenSlides : string | null;
 
-    constructor(currentSlide? : number) {
+    constructor(currentSlide : number, perforator? : Perforator, oldifier? : Oldifier) {
         this.currentSlide = 0;
         this.actionQueue = new ActionQueue(this, this.scrollSlide);
         this.parent = document.getElementsByClassName(SLIDES)[0] as HTMLElement;
@@ -69,8 +62,8 @@ class SlideShow {
             this.parent.append(firstSlideCopy);
         }
 
-        if (this.hasSpecificFormat(this.parent) && this.parentHasClass(SHOW_OLD_FILM_STYLE)) {
-            this.addOldStyle();
+        if (UTIL.hasSpecificFormat(this.parent) && this.parentHasClass(SHOW_OLD_FILM_STYLE) && oldifier) {
+            oldifier.oldify(this.parent);
         }
 
         this.slideshowStyle = this.parentHasClass(SLIDES_SEPARATE) ? SlideshowStyle.SEPARATE : SlideshowStyle.FILMSTRIP;
@@ -88,32 +81,12 @@ class SlideShow {
                                                 this.parentHasClass(SLIDE_FORMAT_4_3_PORTRAIT) ? SlideFormat.PORTRAIT_4_3 :
                                                 this.parentHasClass(SLIDE_FORMAT_16_9_PORTRAIT) ? SlideFormat.PORTRAIT_16_9 :
                                                 this.parentHasClass(SLIDE_FORMAT_SQUARE) ? SlideFormat.SQUARE : SlideFormat.FLEXIBLE;
-            if (this.hasSpecificFormat(this.parent) && this.parentHasClass(SHOW_PERFORATIONS)) {
-                switch (slidesMainFormat) {
-                    case SlideFormat.LANDSCAPE_4_3:
-                        this.addPerforation(this.slidesDirection === FilmstripDirection.VERTICAL ? 4 : 8);
-                        break;
-                    
-                    case SlideFormat.SQUARE:
-                        this.addPerforation(4);
-                        break;
-
-                    case SlideFormat.LANDSCAPE_16_9:
-                        this.addPerforation(this.slidesDirection === FilmstripDirection.VERTICAL ? 3 : 12);
-                        break;
-
-                    case SlideFormat.PORTRAIT_4_3:
-                        this.addPerforation(this.slidesDirection === FilmstripDirection.VERTICAL ? 8 : 4);
-                        break;
-
-                    case SlideFormat.PORTRAIT_16_9:
-                        this.addPerforation(this.slidesDirection === FilmstripDirection.VERTICAL ? 12 : 3);
-                        break;
-                }
+            if (UTIL.hasSpecificFormat(this.parent) && this.parentHasClass(SHOW_PERFORATIONS) && perforator) {
+                perforator.perforate(this.parent, slidesMainFormat, this.slidesDirection);
             }
         }
 
-        if (!this.hasSpecificFormat(this.parent) || this.isThereFlexibleFormatAmongSlides()) {
+        if (!UTIL.hasSpecificFormat(this.parent) || this.isThereFlexibleFormatAmongSlides()) {
             console.warn(FLEXIBLE_WARNING_MESSAGE);
         }
 
@@ -128,52 +101,6 @@ class SlideShow {
 
     private parentHasClass(className: string) : boolean {
         return this.parent.classList.contains(className);
-    }
-
-    private addOldStyle(): void {
-        let slides = this.parent.children;
-        for (let i = 0; i < slides.length; i++) {
-            this.addOldFilmStyleToSlide(slides[i]);
-        }
-    }
-
-    private addOldFilmStyleToSlide(slide: Element): void {
-        let perforationWrapper = document.createElement("div");
-        perforationWrapper.classList.add(OLD_FILM);
-        slide.append(perforationWrapper);
-    }
-
-    private hasSpecificFormat(element: Element) : boolean {
-        let elemClasses = element.classList;
-        return  elemClasses.contains(SLIDE_FORMAT_4_3_LANDSCAPE) || 
-                elemClasses.contains(SLIDE_FORMAT_16_9_LANDSCAPE) ||
-                elemClasses.contains(SLIDE_FORMAT_4_3_PORTRAIT) ||
-                elemClasses.contains(SLIDE_FORMAT_16_9_PORTRAIT) ||
-                elemClasses.contains(SLIDE_FORMAT_SQUARE);
-    }
-
-    private addPerforation(count: number): void {
-        let slides = this.parent.children;
-        let slidesArray = Array.from(slides);
-        let firstSlideIndexWithSpecificFormat = slidesArray.findIndex(slide => this.hasSpecificFormat(slide) || slide.classList.contains(SLIDE_FORMAT_FLEXIBLE));
-
-        if (firstSlideIndexWithSpecificFormat >= 0) {
-            return;
-        }
-
-        for (let i = 0; i < slides.length; i++) {
-            this.addPerforationToSlide(slides[i], count);
-        }
-    }
-
-    private addPerforationToSlide(slide: Element, count : number): void {
-        let perforationWrapper: HTMLElement = document.createElement("div");
-        perforationWrapper.classList.add(PERFORATION_WRAPPER);
-        slide.append(perforationWrapper);
-        for (let i = 1; i < count; i++) {
-            perforationWrapper = perforationWrapper.cloneNode(false) as HTMLElement;
-            slide.append(perforationWrapper);
-        }
     }
 
     private isThereFlexibleFormatAmongSlides() : boolean {
